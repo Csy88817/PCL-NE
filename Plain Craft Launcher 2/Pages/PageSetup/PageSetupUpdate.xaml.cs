@@ -307,7 +307,7 @@ public partial class PageSetupUpdate : IPageView
 
     private void BtnChangelog_Click(object sender, MouseButtonEventArgs e)
     {
-        ModBase.OpenWebsite("https://github.com/PCL-Community/PCL2-CE/releases/v" + ModBase.versionBaseName);
+        ModBase.OpenWebsite("https://github.com/Csy88817/PCL-NE/releases/tag/v" + ModBase.versionBaseName);
     }
 
     public string VersionNameFormat(string str) => PageSetupUpdateViewModel.VersionNameFormat(str);

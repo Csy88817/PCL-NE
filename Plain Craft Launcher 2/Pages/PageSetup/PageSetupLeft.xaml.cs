@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using PCL.Core.App;
 using PCL.Core.App.Localization;
@@ -174,7 +174,7 @@ public partial class PageSetupLeft : IPageView
                 }
                 case 2:
                 {
-                    ModBase.OpenWebsite("https://github.com/PCL-Community/PCL2-CE/issues/");
+                    ModBase.OpenWebsite("https://github.com/Csy88817/PCL-NE/issues/");
                     break;
                 }
             }

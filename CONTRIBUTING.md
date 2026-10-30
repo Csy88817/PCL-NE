@@ -14,7 +14,7 @@
 
 ## 开始之前
 
-查看 [Issues](https://github.com/PCL-Community/PCL2-CE/issues) 寻找可以参与的任务，或创建新 Issue 讨论您的想法。
+查看 [Issues](https://github.com/Csy88817/PCL-NE/issues) 寻找可以参与的任务，或创建新 Issue 讨论您的想法。
 
 ## 贡献流程
 

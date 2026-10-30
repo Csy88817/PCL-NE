@@ -1,30 +1,28 @@
 **简体中文** | [English](README-EN.md) | [繁體中文](README-ZH_TW.md)
 
-> **PCL NE 分支说明**：本仓库是 PCL NE 分支。下方徽章、Releases 与 Issues 链接目前仍指向上游 PCL CE 仓库，需替换为本项目自己的地址（本站：pcl-ne.simpplay.cc.cd）。
-
 <div align="center">
 
 <img src="Plain Craft Launcher 2/Images/icon.ico" alt="Logo" width="80" height="80">
 
 # Plain Craft Launcher NE
 
-[![Stars](https://img.shields.io/github/stars/PCL-Community/PCL-CE?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHBhdGggZD0iTTggLjI1YS43NS43NSAwIDAgMSAuNjczLjQxOGwxLjg4MiAzLjgxNSA0LjIxLjYxMmEuNzUuNzUgMCAwIDEgLjQxNiAxLjI3OWwtMy4wNDYgMi45Ny43MTkgNC4xOTJhLjc1MS43NTEgMCAwIDEtMS4wODguNzkxTDggMTIuMzQ3bC0zLjc2NiAxLjk4YS43NS43NSAwIDAgMS0xLjA4OC0uNzlsLjcyLTQuMTk0TC44MTggNi4zNzRhLjc1Ljc1IDAgMCAxIC40MTYtMS4yOGw0LjIxLS42MTFMNy4zMjcuNjY4QS43NS43NSAwIDAgMSA4IC4yNVoiIGZpbGw9IiNlYWM1NGYiLz48L3N2Zz4=&logoSize=auto&label=stars&labelColor=444444&color=eac54f)](https://github.com/PCL-Community/PCL-CE/)
-![GitHub Release](https://img.shields.io/github/v/release/PCL-Community/PCL-CE?label=release&logo=github&style=for-the-badge)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/PCL-Community/PCL-CE/build-test.yml?style=for-the-badge)
+[![Stars](https://img.shields.io/github/stars/Csy88817/PCL-NE?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHBhdGggZD0iTTggLjI1YS43NS43NSAwIDAgMSAuNjczLjQxOGwxLjg4MiAzLjgxNSA0LjIxLjYxMmEuNzUuNzUgMCAwIDEgLjQxNiAxLjI3OWwtMy4wNDYgMi45Ny43MTkgNC4xOTJhLjc1MS43NTEgMCAwIDEtMS4wODguNzkxTDggMTIuMzQ3bC0zLjc2NiAxLjk4YS43NS43NSAwIDAgMS0xLjA4OC0uNzlsLjcyLTQuMTk0TC44MTggNi4zNzRhLjc1Ljc1IDAgMCAxIC40MTYtMS4yOGw0LjIxLS42MTFMNy4zMjcuNjY4QS43NS43NSAwIDAgMSA4IC4yNVoiIGZpbGw9IiNlYWM1NGYiLz48L3N2Zz4=&logoSize=auto&label=stars&labelColor=444444&color=eac54f)](https://github.com/Csy88817/PCL-NE/)
+![GitHub Release](https://img.shields.io/github/v/release/Csy88817/PCL-NE?label=release&logo=github&style=for-the-badge)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Csy88817/PCL-NE/build-test.yml?style=for-the-badge)
 
-[![Issues](https://img.shields.io/github/issues/PCL-Community/PCL-CE?style=for-the-badge&label=issues&labelColor=444444&color=1F883D&logo=github)](https://github.com/PCL-Community/PCL-CE/issues)
-[![Pull requests](https://img.shields.io/github/issues-pr/PCL-Community/PCL-CE?style=for-the-badge&label=pull%20requests&labelColor=444444&color=1F883D&logo=github)](https://github.com/PCL-Community/PCL-CE/pulls)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/PCL-Community/PCL-CE/total?style=for-the-badge)
+[![Issues](https://img.shields.io/github/issues/Csy88817/PCL-NE?style=for-the-badge&label=issues&labelColor=444444&color=1F883D&logo=github)](https://github.com/Csy88817/PCL-NE/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/Csy88817/PCL-NE?style=for-the-badge&label=pull%20requests&labelColor=444444&color=1F883D&logo=github)](https://github.com/Csy88817/PCL-NE/pulls)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Csy88817/PCL-NE/total?style=for-the-badge)
 [![哔哩哔哩](https://img.shields.io/badge/动态-bilibili-00A4DB?style=for-the-badge&labelColor=444444&logo=bilibili)](https://space.bilibili.com/3546847192811755/dynamic) <br />
 
-<a href="https://trendshift.io/repositories/21800?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-21800" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/21800/weekly?language=C%23" alt="PCL-Community%2FPCL-CE | Trendshift" width="250" height="55"/></a>
-<a href="https://trendshift.io/repositories/21800" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/21800" alt="PCL-Community%2FPCL-CE | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/21800?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-21800" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/21800/weekly?language=C%23" alt="Csy88817%2FPCL-NE | Trendshift" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/21800" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/21800" alt="Csy88817%2FPCL-NE | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
-[NE 版下载](https://github.com/PCL-Community/PCL-CE/releases/latest) |
+[NE 版下载](https://github.com/Csy88817/PCL-NE/releases/latest) |
 [上游存储库](https://github.com/Meloong-Git/PCL)
 
-[提交问题](https://github.com/PCL-Community/PCL-CE/issues/new/choose) |
-[贡献指南](https://github.com/PCL-Community/PCL-CE/wiki/开发指南)
+[提交问题](https://github.com/Csy88817/PCL-NE/issues/new/choose) |
+[贡献指南](https://github.com/Csy88817/PCL-NE/wiki/开发指南)
 
 </div>
 
@@ -61,15 +59,15 @@ PCL NE 始终建议使用最新版本的操作系统以获得最佳体验。
 
 ## 🔒 许可证
 
-- `Plain Craft Launcher 2/` 使用 [自定义许可证](https://github.com/PCL-Community/PCL-CE/blob/dev/Plain%20Craft%20Launcher%202/LICENCE)
-- `其余所有目录` 使用 [Apache License 2.0](https://github.com/PCL-Community/PCL-CE/blob/dev/LICENSE)
+- `Plain Craft Launcher 2/` 使用 [自定义许可证](https://github.com/Csy88817/PCL-NE/blob/ne/Plain%20Craft%20Launcher%202/LICENCE)
+- `其余所有目录` 使用 [Apache License 2.0](https://github.com/Csy88817/PCL-NE/blob/ne/LICENSE)
 
 ## 🌟 统计数据
 ![Alt](https://repobeats.axiom.co/api/embed/3e46296e6e3a134991a783480fd2f62723bb0353.svg "Repobeats analytics image")
 
-[![Star History Chart](https://api.star-history.com/chart?repos=PCL-Community/PCL-CE&type=date&legend=top-left&sealed_token=Ts-GaAXJ5nb9fJERusrXneo05pfZ83tMhReHJ98nmmlemBTqHS5Ozocdep1MTMdsX-6CRiQH9TqiS1Kk7SxjTfk02eUOxnm25oHff6TLLvrY7pGujOkU1IwjVFQLE-5GJYogutJAyI78jujBlOnpk3J2OKAY1PBhmkyUOzW1C1sdz5BzPbj2eBbJGvDx)](https://www.star-history.com/?repos=PCL-Community%2FPCL-CE&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/chart?repos=Csy88817/PCL-NE&type=date&legend=top-left&sealed_token=Ts-GaAXJ5nb9fJERusrXneo05pfZ83tMhReHJ98nmmlemBTqHS5Ozocdep1MTMdsX-6CRiQH9TqiS1Kk7SxjTfk02eUOxnm25oHff6TLLvrY7pGujOkU1IwjVFQLE-5GJYogutJAyI78jujBlOnpk3J2OKAY1PBhmkyUOzW1C1sdz5BzPbj2eBbJGvDx)](https://www.star-history.com/?repos=Csy88817%2FPCL-NE&type=date&legend=top-left)
 
-**此页浏览量**（总计 / 今日）：[![Hits](https://hits.zkitefly.eu.org/?tag=https://github.com/PCL-Community/PCL-CE)](https://hits.zkitefly.eu.org/?tag=https://github.com/PCL-Community/PCL-CE&web=true)
+**此页浏览量**（总计 / 今日）：[![Hits](https://hits.zkitefly.eu.org/?tag=https://github.com/Csy88817/PCL-NE)](https://hits.zkitefly.eu.org/?tag=https://github.com/Csy88817/PCL-NE&web=true)
 ## ❤️ 贡献者
 
-[![](https://contrib.rocks/image?repo=PCL-Community/PCL-CE)](https://github.com/PCL-Community/PCL-CE/graphs/contributors)
+[![](https://contrib.rocks/image?repo=Csy88817/PCL-NE)](https://github.com/Csy88817/PCL-NE/graphs/contributors)
