@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Globalization;
 using System.Reflection;
 using System.Windows;
@@ -34,7 +34,7 @@ public partial class PageLaunchRight : IRefreshable
         PanBack.ScrollToHome();
         PanScroll = PanBack; // 不知道为啥不能在 XAML 设置
         PanLog.Visibility = ModBase.modeDebug ? Visibility.Visible : Visibility.Collapsed;
-        // 社区版提示
+        // NE 版提示
         PanHint.Visibility = States.Hint.CEMessage
             ? Visibility.Visible
             : Visibility.Collapsed;
@@ -50,7 +50,7 @@ public partial class PageLaunchRight : IRefreshable
         if (string.IsNullOrWhiteSpace(input))
             return;
         input = new string(input.Where(char.IsAsciiLetter).ToArray()).ToLower();
-        if (input.Contains("pclcommunity"))
+        if (input.Contains("pclne"))
         {
             ModAnimation.AniDispose(PanHint, true);
             States.Hint.CEMessage = false;
@@ -229,7 +229,7 @@ public partial class PageLaunchRight : IRefreshable
                     break;
                 
                 case 14:
-                    LogWrapper.Info("[Page] 主页预设：PCL CE 公告栏");
+                    LogWrapper.Info("[Page] 主页预设：PCL NE 公告栏");
                     url = "https://s3.pysio.online/pcl2-ce/apiv2/pages/announce.xaml";
                     content = LoadFromNetwork(url);
                     break;

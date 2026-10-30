@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
@@ -498,14 +498,15 @@ public class ModSetup
 
                 break;
             }
-            case 1: // 默认
+            case 1: // 默认（PCL NE 文本标题）
             {
-                ModMain.frmMain.ShapeTitleLogo.Visibility = Visibility.Visible;
+                ModMain.frmMain.ShapeTitleLogo.Visibility = Visibility.Collapsed;
                 ModMain.frmMain.BtnTitleHelp.Visibility = Visibility.Collapsed;
                 ModMain.frmMain.ShapeHMCLTitleLogo.Visibility = Visibility.Collapsed;
-                ModMain.frmMain.LabTitleLogo.Visibility = Visibility.Collapsed;
+                ModMain.frmMain.LabTitleLogo.Visibility = Visibility.Visible;
+                ModMain.frmMain.LabTitleLogo.Text = Branding.ProductTitle;
                 ModMain.frmMain.ImageTitleLogo.Visibility = Visibility.Collapsed;
-                ModMain.frmMain.CELogo.Visibility = Visibility.Visible;
+                ModMain.frmMain.CELogo.Visibility = Visibility.Collapsed;
                 if (ModMain.frmSetupUI is not null)
                 {
                     ModMain.frmSetupUI.CheckLogoLeft.Visibility = Visibility.Collapsed;
@@ -587,7 +588,8 @@ public class ModSetup
 
     public static void UiLogoText(string value)
     {
-        ModMain.frmMain.LabTitleLogo.Text = value;
+        // 未填写自定义标题时回退到品牌名称，避免标题栏留空
+        ModMain.frmMain.LabTitleLogo.Text = string.IsNullOrWhiteSpace(value) ? Branding.ProductTitle : value;
     }
 
     public static void UiLogoLeft(bool value)

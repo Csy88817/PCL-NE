@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using PCL.Core.App;
@@ -265,7 +265,7 @@ public static class UpdateManager
     }
 
     /// <summary>
-    ///     展示社区版提示
+    ///     展示 NE 版提示
     /// </summary>
     /// <param name="IsUpdate">是否为更新时启动</param>
     public static void ShowCEAnnounce()

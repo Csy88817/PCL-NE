@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -255,7 +255,7 @@ public partial class PageSetupLauncherMisc : IPageView
 
     #endregion
 
-    #region 停止使用 PCL CE
+    #region 停止使用 PCL NE
 
     private async void BtnSystemStopUsingPclCe_Click(object sender, MouseButtonEventArgs e)
     {
@@ -280,14 +280,14 @@ public partial class PageSetupLauncherMisc : IPageView
         }
         catch (Exception ex)
         {
-            ModBase.Log(ex, "停止使用 PCL CE 失败", ModBase.LogLevel.Msgbox,
+            ModBase.Log(ex, "停止使用 PCL NE 失败", ModBase.LogLevel.Msgbox,
                 userSummary: Lang.Text("Setup.Error.OperationFailed"));
         }
     }
 
     private void StopUsingPClCeCore(bool removeMcResources)
     {
-        // 删除 MC 文件夹内的 PCL CE 配置
+        // 删除 MC 文件夹内的 PCL NE 配置
         if (removeMcResources && States.Game.Folders != "")
         {
             foreach (var path in States.Game.Folders.Split('|'))

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -408,7 +408,7 @@ public static class ModDownload
             }
 
             // 添加 PCL 特供项
-            // 这个社区版下不了
+            // 这个 NE 版下不了
             // If File.Exists(PathTemp & "Cache\download.json") Then Versions.Merge(GetJson(ReadFile(PathTemp & "Cache\download.json")))
             // 返回
             loader.output = new DlClientListResult

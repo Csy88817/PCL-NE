@@ -21,7 +21,7 @@ public partial class PageSetupUpdateViewModel : ViewModelBase
 
     public void Reload()
     {
-        CurrentVersionText = "PCL CE " + VersionNameFormat(ModBase.versionBaseName);
+        CurrentVersionText = "PCL NE " + VersionNameFormat(ModBase.versionBaseName);
     }
 
     public static string VersionNameFormat(string str)
