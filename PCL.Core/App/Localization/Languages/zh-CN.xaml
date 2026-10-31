@@ -3689,4 +3689,23 @@
     <sys:String x:Key="Watcher.WindowLoaded">Minecraft 窗口已加载：{0}（{1}）</sys:String>
     <sys:String x:Key="Watcher.WindowMaximized">已最大化 Minecraft 窗口：{0}</sys:String>
 
+<!-- Rift 加载器 -->
+    <sys:String x:Key="Common.Installation.Rift">Rift</sys:String>
+    <sys:String x:Key="Download.Left.Rift">Rift</sys:String>
+    <sys:String x:Key="Download.Source.RiftOfficial">Rift 官方源（GitHub）</sys:String>
+    <sys:String x:Key="Download.Install.Compat.IncompatibleWithRift">与 Rift 不兼容</sys:String>
+    <sys:String x:Key="Download.Version.Rift.Intro.Title">Rift 简介</sys:String>
+    <sys:String x:Key="Download.Version.Rift.Intro.Description">Rift 是面向 Minecraft 1.13 ~ 1.13.2 的轻量级 Mod 加载器，基于 LaunchWrapper 与 Mixin 实现，与其他主加载器（Forge、Fabric 等）互斥，不能同时安装。</sys:String>
+    <sys:String x:Key="Download.Version.Rift.LoadingList">正在获取 Rift 列表</sys:String>
+    <sys:String x:Key="Download.Version.Rift.TargetVersion">适用于 Minecraft {0}</sys:String>
+    <sys:String x:Key="Minecraft.Download.Error.RiftInstallFailed">安装新 Rift 实例失败</sys:String>
+    <sys:String x:Key="Minecraft.Download.Error.RiftProfileMissing">未能获取 Rift {0} 的版本信息，无法确定它对应的 Minecraft 版本</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.StartRiftDependencyDownload">启动 Rift 依赖实例下载</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.InstallRift">安装 Rift</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.RiftDownload">Rift {0} 下载</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.RiftInstallerDownload">Rift {0} 保存</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.AnalyzeRiftLibraries">分析 Rift 支持库文件</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.DownloadRiftLibraries">下载 Rift 支持库文件</sys:String>
+    <sys:String x:Key="Select.Instance.Card.Rift">Rift 实例</sys:String>
+
 </ResourceDictionary>

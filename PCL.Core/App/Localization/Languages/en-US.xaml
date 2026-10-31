@@ -3689,4 +3689,23 @@
     <sys:String x:Key="Watcher.WindowLoaded">Minecraft window loaded: {0} ({1})</sys:String>
     <sys:String x:Key="Watcher.WindowMaximized">Minecraft window maximized: {0}</sys:String>
 
+<!-- Rift loader -->
+    <sys:String x:Key="Common.Installation.Rift">Rift</sys:String>
+    <sys:String x:Key="Download.Left.Rift">Rift</sys:String>
+    <sys:String x:Key="Download.Source.RiftOfficial">Rift official source (GitHub)</sys:String>
+    <sys:String x:Key="Download.Install.Compat.IncompatibleWithRift">Incompatible with Rift</sys:String>
+    <sys:String x:Key="Download.Version.Rift.Intro.Title">Introduction of Rift</sys:String>
+    <sys:String x:Key="Download.Version.Rift.Intro.Description">Rift is a lightweight mod loader for Minecraft 1.13 to 1.13.2, built on LaunchWrapper and Mixin. It is mutually exclusive with other main loaders such as Forge and Fabric.</sys:String>
+    <sys:String x:Key="Download.Version.Rift.LoadingList">Getting Rift list...</sys:String>
+    <sys:String x:Key="Download.Version.Rift.TargetVersion">For Minecraft {0}</sys:String>
+    <sys:String x:Key="Minecraft.Download.Error.RiftInstallFailed">Failed to install the new Rift instance</sys:String>
+    <sys:String x:Key="Minecraft.Download.Error.RiftProfileMissing">Failed to get the version information of Rift {0}, so its Minecraft version is unknown</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.StartRiftDependencyDownload">Start downloading the instance that Rift depends on</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.InstallRift">Install Rift</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.RiftDownload">Rift {0} download</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.RiftInstallerDownload">Rift {0} save</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.AnalyzeRiftLibraries">Analyze Rift libraries</sys:String>
+    <sys:String x:Key="Minecraft.Download.Stage.DownloadRiftLibraries">Download Rift libraries</sys:String>
+    <sys:String x:Key="Select.Instance.Card.Rift">Rift instance</sys:String>
+
 </ResourceDictionary>

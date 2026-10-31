@@ -17,7 +17,8 @@ public partial class PageInstanceInstallViewModel : ViewModelBase
         string? Cleanroom,
         string? LabyMod,
         string? OptiFine,
-        bool HasLiteLoader);
+        bool HasLiteLoader,
+        string? Rift);
 
     [ObservableProperty] private string? _selectedTitle = "";
 
@@ -46,6 +47,14 @@ public partial class PageInstanceInstallViewModel : ViewModelBase
     [ObservableProperty] private bool _showLiteLoaderImage = true;
 
     [ObservableProperty] private string? _liteLoaderText = "";
+
+    [ObservableProperty] private bool _showRiftCard = true;
+
+    [ObservableProperty] private bool _showRiftClear = true;
+
+    [ObservableProperty] private bool _showRiftImage = true;
+
+    [ObservableProperty] private string? _riftText = "";
 
     [ObservableProperty] private bool _showForgeCard = true;
 
@@ -152,6 +161,8 @@ public partial class PageInstanceInstallViewModel : ViewModelBase
 
         if (selection.HasLiteLoader) return "pack://application:,,,/images/Blocks/Egg.png";
 
+        if (selection.Rift is not null) return "pack://application:,,,/images/Blocks/Egg.png";
+
         if (selection.OptiFine is not null) return "pack://application:,,,/images/Blocks/GrassPath.png";
 
         if (selection.Cleanroom is not null) return "pack://application:,,,/images/Blocks/Cleanroom.png";
@@ -176,7 +187,8 @@ public partial class PageInstanceInstallViewModel : ViewModelBase
             ("Common.Installation.NeoForge", selection.NeoForge),
             ("Common.Installation.Cleanroom", selection.Cleanroom),
             ("Common.Installation.LabyMod", selection.LabyMod),
-            ("Common.Installation.OptiFine", selection.OptiFine)
+            ("Common.Installation.OptiFine", selection.OptiFine),
+            ("Common.Installation.Rift", selection.Rift)
         };
 
         parts.AddRange(

@@ -10,5 +10,6 @@ internal enum ModLoaderType
     Cleanroom,
     Fabric,
     LegacyFabric,
-    LabyMod
+    LabyMod,
+    Rift
 }

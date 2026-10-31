@@ -12,15 +12,11 @@ public static class UpdateManager
 {
     public static bool isUpdateWaitingRestart;
 
+    // PCL NE：更新与公告一律走自己的站点（apiv2/* 接口由 Cloudflare Worker 生成），
+    // 不再查询上游 PCL CE 的镜像与 GitHub 源，避免把 NE 用户更新成上游版本。
     public static UpdatesWrapperModel remoteServer = new(new List<IUpdateSource>
     {
-        new UpdatesMirrorChyanModel(),
-        new UpdatesRandomModel(new[]
-        {
-            new UpdatesMinioModel("https://s3.pysio.online/pcl2-ce/", "Pysio"),
-            new UpdatesMinioModel("https://staticassets.naids.com/resources/pclce/", "Naids")
-        }),
-        new UpdatesMinioModel("https://github.com/PCL-Community/PCL2_CE_Server/raw/main/", "GitHub")
+        new UpdatesMinioModel("https://pcl-ne.simpplay.cc.cd/", "PCL NE")
     });
 
     public static bool IsCurrentVersionBeta

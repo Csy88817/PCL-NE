@@ -22,6 +22,14 @@ public partial class PageDownloadInstallViewModel : ViewModelBase
 
     [ObservableProperty] private string? _liteLoaderText = "";
 
+    [ObservableProperty] private bool _showRiftCard = true;
+
+    [ObservableProperty] private bool _showRiftClear = true;
+
+    [ObservableProperty] private bool _showRiftImage = true;
+
+    [ObservableProperty] private string? _riftText = "";
+
     [ObservableProperty] private bool _showForgeCard = true;
 
     [ObservableProperty] private bool _showForgeClear = true;

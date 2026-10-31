@@ -1621,6 +1621,332 @@ public static class ModDownloadLib
 
     #endregion
 
+    #region Rift 下载
+
+    /// <summary>
+    ///     获取 Rift 实例的版本名，如“1.13.2-Rift-1.0.4-106”。
+    /// </summary>
+    internal static string RiftVersionNameGet(ModDownload.DlRiftListEntry entry)
+    {
+        var baseName = string.IsNullOrWhiteSpace(entry.Inherit) ? "Rift" : entry.Inherit + "-Rift";
+        return string.IsNullOrWhiteSpace(entry.Version) ? baseName : baseName + "-" + entry.Version;
+    }
+
+    /// <summary>
+    ///     确保已经取得 Rift 对应的 Minecraft 版本。若 Rift 的 Jar 尚未下载则先下载它。
+    /// </summary>
+    internal static string RiftInheritEnsure(ModDownload.DlRiftListEntry entry)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.Inherit))
+            return entry.Inherit;
+
+        var libPath = ModLibrary.McLibGet("org.dimdev:Rift:" + entry.Version);
+        var checker = new ModBase.FileChecker(actualSize: entry.Size <= 0L ? -1 : entry.Size);
+        if (checker.Check(libPath) is not null)
+        {
+            if (string.IsNullOrWhiteSpace(entry.Url))
+                throw new Exception(Lang.Text("Minecraft.Download.Error.RiftProfileMissing", entry.Version));
+            Directory.CreateDirectory(Path.GetDirectoryName(libPath)!);
+            ModNet.NetDownloadByLoader(entry.Url, libPath);
+        }
+
+        entry.Inherit = ModDownload.RiftInheritGet(libPath);
+        return entry.Inherit;
+    }
+
+    /// <summary>
+    ///     构造 Rift 实例的支持库列表。
+    /// </summary>
+    private static JsonArray RiftLibrariesGet(ModDownload.DlRiftListEntry entry)
+    {
+        var libraries = new JsonArray();
+        // Rift 本体（列表加载时已预先下载到 libraries 内）
+        libraries.Add(new JsonObject
+        {
+            ["name"] = "org.dimdev:Rift:" + entry.Version,
+            ["downloads"] = new JsonObject
+            {
+                ["artifact"] = new JsonObject
+                {
+                    ["path"] = "org/dimdev/Rift/" + entry.Version + "/Rift-" + entry.Version + ".jar",
+                    ["size"] = entry.Size,
+                    ["url"] = entry.Url
+                }
+            }
+        });
+        // Rift 本体只含 org/dimdev/**，Mixin 与 ASM 需要单独提供
+        libraries.Add(ModBase.GetJson(
+            "{\"name\":\"org.spongepowered:mixin:0.7.11-SNAPSHOT\",\"url\":\"https://repo.spongepowered.org/repository/maven-public/\"}"));
+        libraries.Add(ModBase.GetJson("{\"name\":\"org.ow2.asm:asm:6.2\",\"url\":\"https://repo1.maven.org/maven2/\"}"));
+        libraries.Add(ModBase.GetJson("{\"name\":\"org.ow2.asm:asm-commons:6.2\",\"url\":\"https://repo1.maven.org/maven2/\"}"));
+        libraries.Add(ModBase.GetJson("{\"name\":\"org.ow2.asm:asm-tree:6.2\",\"url\":\"https://repo1.maven.org/maven2/\"}"));
+        // LaunchWrapper：1.13.x 的原版 Json 一般已包含，重复一项不会造成问题
+        libraries.Add(ModBase.GetJson("{\"name\":\"net.minecraft:launchwrapper:1.12\"}"));
+        return libraries;
+    }
+
+    public static void McDownloadRift(ModDownload.DlRiftListEntry downloadInfo)
+    {
+        try
+        {
+            var id = RiftInheritEnsure(downloadInfo);
+            var versionName = RiftVersionNameGet(downloadInfo);
+            var versionFolder = Path.Combine(ModFolder.mcFolderSelected, "versions", versionName);
+
+            // 重复任务检查
+            foreach (var OngoingLoader in ModLoader.loaderTaskbar.ToList())
+            {
+                if ((OngoingLoader.name ?? "") != (Lang.Text("Minecraft.Download.Stage.RiftDownload", id) ?? ""))
+                    continue;
+                HintService.Hint(Lang.Text("Minecraft.Download.Error.InstanceDownloading"), HintType.Error);
+                return;
+            }
+
+            // 已有实例检查
+            if (File.Exists(Path.Combine(versionFolder, versionName + ".json")))
+            {
+                if (ModMain.MyMsgBox(
+                        Lang.Text("Minecraft.Download.Error.InstanceAlreadyExists", versionName, "\r\n"),
+                        Lang.Text("Minecraft.Download.Error.InstanceAlreadyExists.Title"),
+                        Lang.Text("Common.Action.Continue"), Lang.Text("Common.Action.Cancel")
+                    ) == 1)
+                {
+                    File.Delete(Path.Combine(versionFolder, versionName + ".json"));
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            // 启动
+            var loader =
+                new ModLoader.LoaderCombo<string>(Lang.Text("Minecraft.Download.Stage.RiftDownload", id),
+                        McDownloadRiftLoader(downloadInfo))
+                    { OnStateChanged = McInstallState };
+            loader.Start(versionFolder);
+            ModLoader.LoaderTaskbarAdd(loader);
+            ModMain.frmMain.BtnExtraDownload.ShowRefresh();
+            ModMain.frmMain.BtnExtraDownload.Ribble();
+        }
+
+        catch (Exception ex)
+        {
+            ModBase.Log(
+                ex,
+                "开始 Rift 下载失败",
+                ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Minecraft.Download.Error.OperationFailed"));
+        }
+    }
+
+    private static void McDownloadRiftSave(ModDownload.DlRiftListEntry downloadInfo)
+    {
+        try
+        {
+            var target = SystemDialogs.SelectSaveFile(Lang.Text("Download.Version.SelectSaveLocation"),
+                downloadInfo.FileName, Lang.Text("Minecraft.Download.Stage.ForgelikeInstallerFilter", "Rift", "jar"));
+            if (!target.Contains(@"\"))
+                return;
+
+            var loaders = new List<ModLoader.LoaderBase>
+            {
+                new LoaderDownload(Lang.Text("Minecraft.Download.Stage.DownloadMainFile"),
+                        new List<DownloadFile>
+                        {
+                            new(new[] { downloadInfo.Url }, target, new ModBase.FileChecker(minSize: 1024))
+                        })
+                    { ProgressWeight = 15d }
+            };
+            // 启动
+            var loader =
+                new ModLoader.LoaderCombo<ModDownload.DlRiftListEntry>(
+                        Lang.Text("Minecraft.Download.Stage.RiftInstallerDownload", downloadInfo.Version), loaders)
+                    { OnStateChanged = LoaderStateChangedHintOnly };
+            loader.Start(downloadInfo);
+            ModLoader.LoaderTaskbarAdd(loader);
+            ModMain.frmMain.BtnExtraDownload.ShowRefresh();
+            ModMain.frmMain.BtnExtraDownload.Ribble();
+        }
+
+        catch (Exception ex)
+        {
+            ModBase.Log(
+                ex,
+                "开始 Rift 保存失败",
+                ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Minecraft.Download.Error.OperationFailed"));
+        }
+    }
+
+    /// <summary>
+    ///     获取下载某个 Rift 实例的加载器列表。
+    /// </summary>
+    internal static List<ModLoader.LoaderBase> McDownloadRiftLoader(ModDownload.DlRiftListEntry downloadInfo,
+        string mcFolder = null, ModLoader.LoaderCombo<string> clientDownloadLoader = null, bool fixLibrary = true,
+        string versionName = null)
+    {
+        // 参数初始化
+        mcFolder = mcFolder ?? ModFolder.mcFolderSelected;
+        var isCustomFolder = (mcFolder ?? "") != (ModFolder.mcFolderSelected ?? "");
+        var id = downloadInfo.Inherit;
+        versionName = versionName ?? RiftVersionNameGet(downloadInfo);
+        var versionFolder = Path.Combine(mcFolder, "versions", versionName);
+        var loaders = new List<ModLoader.LoaderBase>();
+
+        // 启动依赖实例的下载
+        if (clientDownloadLoader is null)
+            loaders.Add(new ModLoader.LoaderTask<string, string>(
+                Lang.Text("Minecraft.Download.Stage.StartRiftDependencyDownload"), _ =>
+            {
+                if (isCustomFolder)
+                    throw new Exception(Lang.Text("Minecraft.Download.Error.NoVanillaLoaderSpecified"));
+                clientDownloadLoader = McDownloadClient(NetPreDownloadBehaviour.ExitWhileExistsOrDownloading, id);
+            })
+            {
+                ProgressWeight = 0.2d,
+                show = false,
+                block = false
+            });
+        // 安装
+        // 新建实例文件夹
+        // 构造实例 Json
+        // 输出 Json 文件
+        loaders.Add(new ModLoader.LoaderTask<string, string>(Lang.Text("Minecraft.Download.Stage.InstallRift"),
+            _ =>
+        {
+            try
+            {
+                Directory.CreateDirectory(versionFolder);
+                var versionJson = new JsonObject();
+                versionJson.Add("id", versionName);
+                var releaseDate = string.IsNullOrWhiteSpace(downloadInfo.ReleaseTime)
+                    ? DateTime.Now
+                    : DateTime.Parse(downloadInfo.ReleaseTime, Lang.Culture);
+                versionJson.Add("time", releaseDate);
+                versionJson.Add("releaseTime", releaseDate);
+                versionJson.Add("type", "release");
+                versionJson.Add("inheritsFrom", id);
+                versionJson.Add("jar", id);
+                versionJson.Add("mainClass", "net.minecraft.launchwrapper.Launch");
+                versionJson.Add("minimumLauncherVersion", 18);
+                versionJson.Add("arguments",
+                    (JsonNode)ModBase.GetJson(
+                        "{\"game\":[\"--tweakClass\",\"org.dimdev.riftloader.launch.RiftLoaderClientTweaker\"]}"));
+                versionJson.Add("libraries", RiftLibrariesGet(downloadInfo));
+                ModBase.WriteFile(Path.Combine(versionFolder, versionName + ".json"), versionJson.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(Lang.Text("Minecraft.Download.Error.RiftInstallFailed"), ex);
+            }
+        }) { ProgressWeight = 1d });
+        // 下载支持库
+        if (fixLibrary)
+        {
+            loaders.Add(new ModLoader.LoaderTask<string, List<DownloadFile>>(
+                    Lang.Text("Minecraft.Download.Stage.AnalyzeRiftLibraries"),
+                    task => task.output =
+                        ModLibrary.McLibNetFilesFromInstance(new McInstance(versionFolder)))
+                { ProgressWeight = 1d, show = false });
+            loaders.Add(new LoaderDownload(Lang.Text("Minecraft.Download.Stage.DownloadRiftLibraries"),
+                    new List<DownloadFile>())
+                { ProgressWeight = 6d });
+        }
+
+        return loaders;
+    }
+
+    #endregion
+
+    #region Rift 下载菜单
+
+    public static MyListItem RiftDownloadListItem(ModDownload.DlRiftListEntry entry,
+        MyListItem.ClickEventHandler onClick, bool isSaveOnly)
+    {
+        var infoParts = new List<string>
+        {
+            entry.IsPreview
+                ? Lang.Text("Download.Version.Type.Preview")
+                : Lang.Text("Download.Version.Type.Stable")
+        };
+
+        if (!string.IsNullOrEmpty(entry.ReleaseTime))
+            infoParts.Add(Lang.Text("Download.Version.ReleaseDate", entry.ReleaseTime));
+
+        infoParts.Add(string.IsNullOrWhiteSpace(entry.Inherit)
+            ? Lang.Text("Minecraft.Version.Unknown")
+            : Lang.Text("Download.Version.Rift.TargetVersion", entry.Inherit));
+
+        // 建立控件
+        var newItem = new MyListItem
+        {
+            Title = "Rift " + entry.Version,
+            SnapsToDevicePixels = true,
+            Height = 42d,
+            Type = MyListItem.CheckType.Clickable,
+            Tag = entry,
+            Info = string.Join("  |  ", infoParts),
+            Logo = ModBase.pathImage + "Blocks/Egg.png"
+        };
+
+        newItem.Click += onClick;
+        // 建立菜单
+        newItem.ContentHandler = isSaveOnly
+            ? RiftSaveContMenuBuild
+            : RiftContMenuBuild;
+        // 结束
+        return newItem;
+    }
+
+    private static void RiftSaveContMenuBuild(MyListItem sender, EventArgs e)
+    {
+        var btnList = new MyIconButton { SvgIcon = "lucide/list", ToolTip = Lang.Text("Download.Version.ViewAllVersions"), Tag = sender };
+        ToolTipService.SetPlacement(btnList, PlacementMode.Center);
+        ToolTipService.SetVerticalOffset(btnList, 30d);
+        ToolTipService.SetHorizontalOffset(btnList, 2d);
+        btnList.Click += (sender, e) => RiftAll_Click(sender, (RoutedEventArgs)e);
+        sender.Buttons = new[] { btnList };
+    }
+
+    private static void RiftContMenuBuild(MyListItem sender, EventArgs e)
+    {
+        var btnSave = new MyIconButton { SvgIcon = "lucide/save", ToolTip = Lang.Text("Download.Version.SaveInstaller"), Tag = sender };
+        ToolTipService.SetPlacement(btnSave, PlacementMode.Center);
+        ToolTipService.SetVerticalOffset(btnSave, 30d);
+        ToolTipService.SetHorizontalOffset(btnSave, 2d);
+        btnSave.Click += (sender, e) => RiftSave_Click(sender, (RoutedEventArgs)e);
+        var btnList = new MyIconButton { SvgIcon = "lucide/list", ToolTip = Lang.Text("Download.Version.ViewAllVersions"), Tag = sender };
+        ToolTipService.SetPlacement(btnList, PlacementMode.Center);
+        ToolTipService.SetVerticalOffset(btnList, 30d);
+        ToolTipService.SetHorizontalOffset(btnList, 2d);
+        btnList.Click += (sender, e) => RiftAll_Click(sender, (RoutedEventArgs)e);
+        sender.Buttons = [btnSave, btnList];
+    }
+
+    private static void RiftAll_Click(object sender, RoutedEventArgs e)
+    {
+        ModDownload.DlRiftListEntry version;
+        if (((dynamic)sender).Tag is ModDownload.DlRiftListEntry)
+            version = (ModDownload.DlRiftListEntry)((dynamic)sender).Tag;
+        else
+            version = (ModDownload.DlRiftListEntry)((dynamic)sender).Tag.Tag;
+        ModBase.OpenWebsite("https://github.com/DimensionalDevelopment/Rift/releases/tag/" + version.Tag);
+    }
+
+    public static void RiftSave_Click(object sender, RoutedEventArgs e)
+    {
+        // ListItem 与小按钮都会调用这个方法
+        ModDownload.DlRiftListEntry version;
+        if (((dynamic)sender).Tag is ModDownload.DlRiftListEntry)
+            version = (ModDownload.DlRiftListEntry)((dynamic)sender).Tag;
+        else
+            version = (ModDownload.DlRiftListEntry)((dynamic)sender).Tag.Tag;
+        McDownloadRiftSave(version);
+    }
+
+    #endregion
+
     #region Forgelike 下载
 
     public static void McDownloadForgelikeSave(ModDownload.DlForgelikeEntry info)
@@ -3576,6 +3902,11 @@ public static class ModDownloadLib
         public ModDownload.DlLiteLoaderListEntry liteLoaderEntry = null;
 
         /// <summary>
+        ///     欲下载的 Rift 详细信息。
+        /// </summary>
+        public ModDownload.DlRiftListEntry riftEntry = null;
+
+        /// <summary>
         ///     可选。欲下载的 Minecraft Json 地址。
         /// </summary>
         public string minecraftJson = null;
@@ -3856,6 +4187,9 @@ public static class ModDownloadLib
         string liteLoaderFolder = null;
         if (request.liteLoaderEntry is not null)
             liteLoaderFolder = Path.Combine(tempMcFolder, "versions", request.minecraftName + "-LiteLoader");
+        string riftFolder = null;
+        if (request.riftEntry is not null)
+            riftFolder = Path.Combine(tempMcFolder, "versions", request.minecraftName + "-Rift");
 
         // 判断 OptiFine 是否作为 Mod 进行下载
         var modable = request.fabricVersion is not null || request.legacyFabricVersion is not null ||
@@ -3889,6 +4223,8 @@ public static class ModDownloadLib
             ModBase.Log("[Download] LabyMod 缓存：" + labyModFolder);
         if (liteLoaderFolder is not null)
             ModBase.Log("[Download] LiteLoader 缓存：" + liteLoaderFolder);
+        if (riftFolder is not null)
+            ModBase.Log("[Download] Rift 缓存：" + riftFolder);
         ModBase.Log("[Download] 对应的原版版本：" + request.minecraftName);
 
         // 重复实例检查
@@ -4033,6 +4369,17 @@ public static class ModDownloadLib
                 ProgressWeight = 1d,
                 block = request.fabricVersion is null
             });
+        // Rift
+        if (request.riftEntry is not null)
+            loaderList.Add(new ModLoader.LoaderCombo<string>(
+                Lang.Text("Minecraft.Download.Stage.LoaderDownloadCombo", "Rift", request.minecraftName),
+                McDownloadRiftLoader(request.riftEntry, tempMcFolder, clientLoader, false,
+                    request.minecraftName + "-Rift"))
+            {
+                show = false,
+                ProgressWeight = 1d,
+                block = true
+            });
         // Fabric
         if (request.fabricVersion is not null)
             loaderList.Add(new ModLoader.LoaderCombo<string>(
@@ -4064,7 +4411,7 @@ public static class ModDownloadLib
             MergeJson(instanceFolder, instanceFolder, optiFineFolder, optiFineAsMod, forgeFolder, request.forgeVersion,
                 neoForgeFolder, request.neoForgeVersion, cleanroomFolder, request.cleanroomVersion, fabricFolder,
                 labyModFolder, request.labyModChannel, liteLoaderFolder, request.mmcPackInfo,
-                legacyFabricFolder);
+                legacyFabricFolder, riftFolder);
             task.Progress = 0.2d;
             // 迁移文件
             if (Directory.Exists(Path.Combine(tempMcFolder, "libraries")))
@@ -4148,7 +4495,7 @@ public static class ModDownloadLib
         string neoForgeVersion = null, string cleanroomFolder = null, string cleanroomVersion = null,
         string fabricFolder = null, string labyModFolder = null,
         string labyModChannel = null, string liteLoaderFolder = null, ModModpack.MMCPackInfo mMCPackInfo = null,
-        string legacyFabricFolder = null)
+        string legacyFabricFolder = null, string riftFolder = null)
     {
         ModBase.Log("[Download] 开始进行实例合并，输出：" + outputFolder + "，Minecraft：" + minecraftFolder +
                     (optiFineFolder is not null ? "，OptiFine：" + optiFineFolder : "") +
@@ -4156,6 +4503,7 @@ public static class ModDownloadLib
                     (neoForgeFolder is not null ? "，NeoForge：" + neoForgeFolder : "") +
                     (cleanroomFolder is not null ? "，Cleanroom：" + cleanroomFolder : "") +
                     (liteLoaderFolder is not null ? "，LiteLoader：" + liteLoaderFolder : "") +
+                    (riftFolder is not null ? "，Rift：" + riftFolder : "") +
                     (fabricFolder is not null ? "，Fabric：" + fabricFolder : "") +
                     (legacyFabricFolder is not null ? "，LegacyFabric：" + legacyFabricFolder : "") +
                     (labyModFolder is not null ? "，LabyMod：" + labyModFolder : ""));
@@ -4167,6 +4515,7 @@ public static class ModDownloadLib
         var hasNeoForge = neoForgeFolder is not null;
         var hasCleanroom = cleanroomFolder is not null;
         var hasLiteLoader = liteLoaderFolder is not null;
+        var hasRift = riftFolder is not null;
         var hasFabric = fabricFolder is not null;
         var hasLabyMod = labyModFolder is not null;
         string outputName;
@@ -4176,6 +4525,7 @@ public static class ModDownloadLib
         string neoForgeName;
         string cleanroomName;
         string liteLoaderName;
+        string riftName;
         string fabricName;
         string legacyFabricName;
         string labyModName;
@@ -4186,6 +4536,7 @@ public static class ModDownloadLib
         string neoForgeJsonPath = null;
         string cleanroomJsonPath = null;
         string liteLoaderJsonPath = null;
+        string riftJsonPath = null;
         string fabricJsonPath = null;
         string labyModJsonPath = null;
         string legacyFabricJsonPath = null;
@@ -4246,6 +4597,14 @@ public static class ModDownloadLib
             liteLoaderJsonPath = Path.Combine(liteLoaderFolder, liteLoaderName + ".json");
         }
 
+        if (hasRift)
+        {
+            if (!riftFolder.EndsWithF(@"\"))
+                riftFolder += @"\";
+            riftName = ModBase.GetFolderNameFromPath(riftFolder);
+            riftJsonPath = Path.Combine(riftFolder, riftName + ".json");
+        }
+
         if (hasFabric)
         {
             if (!fabricFolder.EndsWithF(@"\"))
@@ -4280,6 +4639,7 @@ public static class ModDownloadLib
         JsonObject legacyFabricJson = null;
         JsonObject cleanroomJson = null;
         JsonObject liteLoaderJson = null;
+        JsonObject riftJson = null;
         JsonObject fabricJson = null;
         JsonObject labyModJson = null;
 
@@ -4337,6 +4697,15 @@ public static class ModDownloadLib
                 throw new Exception(Lang.Text("Minecraft.Download.Error.JsonInvalid", "LiteLoader", liteLoaderJsonPath,
                     liteLoaderJsonText.Substring(0, Math.Min(liteLoaderJsonText.Length, 1000))));
             liteLoaderJson = (JsonObject)ModBase.GetJson(liteLoaderJsonText);
+        }
+
+        if (hasRift)
+        {
+            var riftJsonText = ModBase.ReadFile(riftJsonPath);
+            if (!riftJsonText.StartsWithF("{"))
+                throw new Exception(Lang.Text("Minecraft.Download.Error.JsonInvalid", "Rift", riftJsonPath,
+                    riftJsonText.Substring(0, Math.Min(riftJsonText.Length, 1000))));
+            riftJson = (JsonObject)ModBase.GetJson(riftJsonText);
         }
 
         if (hasFabric)
@@ -4464,6 +4833,15 @@ public static class ModDownloadLib
             liteLoaderJson.Remove("releaseTime");
             liteLoaderJson.Remove("time");
             outputJson.Merge(liteLoaderJson);
+        }
+
+        if (hasRift)
+        {
+            // 合并 Rift：它会覆盖 mainClass，并往 arguments.game 里追加 --tweakClass
+            riftJson.Remove("releaseTime");
+            riftJson.Remove("time");
+            riftJson.Remove("id");
+            outputJson.Merge(riftJson);
         }
 
         if (hasFabric)

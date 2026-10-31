@@ -44,6 +44,8 @@ public partial class PageDownloadInstall
         LoadOptiFabric.StateChanged += (_, _, _) => ReloadSelected();
         CardLiteLoader.Swap += (_, _) => ReloadSelected();
         LoadLiteLoader.StateChanged += (_, _, _) => ReloadSelected();
+        CardRift.Swap += (_, _) => ReloadSelected();
+        LoadRift.StateChanged += (_, _, _) => ReloadSelected();
         LoadCleanroom.StateChanged += (_, _, _) => ReloadSelected();
         CardCleanroom.Swap += (_, _) => ReloadSelected();
         LoadLabyMod.StateChanged += (_, _, _) => ReloadSelected();
@@ -56,6 +58,9 @@ public partial class PageDownloadInstall
         CardLiteLoader.PreviewSwap += CardLiteLoader_PreviewSwap;
         LoadLiteLoader.StateChanged += (_, _, _) => LiteLoader_Loaded();
         BtnLiteLoaderClear.MouseLeftButtonUp += LiteLoader_Clear;
+        CardRift.PreviewSwap += CardRift_PreviewSwap;
+        LoadRift.StateChanged += (_, _, _) => Rift_Loaded();
+        BtnRiftClear.MouseLeftButtonUp += Rift_Clear;
         CardForge.PreviewSwap += CardForge_PreviewSwap;
         LoadForge.StateChanged += (_, _, _) => Forge_Loaded();
         BtnForgeClear.MouseLeftButtonUp += Forge_Clear;
@@ -100,6 +105,7 @@ public partial class PageDownloadInstall
         PanBack.ScrollToHome();
         ModDownload.dlOptiFineListLoader.Start();
         ModDownload.dlLiteLoaderListLoader.Start();
+        ModDownload.dlRiftListLoader.Start();
         ModDownload.dlFabricListLoader.Start();
         ModDownload.dlNeoForgeListLoader.Start();
         ModDownload.dlCleanroomListLoader.Start();
@@ -120,6 +126,7 @@ public partial class PageDownloadInstall
 
         LoadOptiFine.State = ModDownload.dlOptiFineListLoader;
         LoadLiteLoader.State = ModDownload.dlLiteLoaderListLoader;
+        LoadRift.State = ModDownload.dlRiftListLoader;
         LoadFabric.State = ModDownload.dlFabricListLoader;
         LoadFabricApi.State = ModDownload.dlFabricApiLoader;
         LoadNeoForge.State = ModDownload.dlNeoForgeListLoader;
@@ -239,6 +246,7 @@ public partial class PageDownloadInstall
                 TextSelectName.Validate();
                 OptiFine_Loaded();
                 LiteLoader_Loaded();
+                Rift_Loaded();
                 Forge_Loaded();
                 NeoForge_Loaded();
                 Cleanroom_Loaded();
@@ -355,6 +363,9 @@ public partial class PageDownloadInstall
     // LiteLoader
     private ModDownload.DlLiteLoaderListEntry? selectedLiteLoader;
 
+    // Rift
+    private ModDownload.DlRiftListEntry? selectedRift;
+
     // Forge
     private ModDownload.DlForgeVersionEntry? selectedForge;
 
@@ -457,6 +468,36 @@ public partial class PageDownloadInstall
                 _vm.ShowLiteLoaderImage = true;
                 _vm.LiteLoaderText = selectedLiteLoader.Inherit;
                 LabLiteLoader.Foreground = ThemeManager.colorGray1;
+            }
+        }
+
+        // Rift
+        if (!McVersionComparer.CompareVersionGe(_vanillaName, "1.13")
+            || !McVersionComparer.CompareVersionGe("1.13.2", _vanillaName))
+        {
+            _vm.ShowRiftCard = false;
+        }
+        else
+        {
+            _vm.ShowRiftCard = true;
+            var riftError = LoadRiftGetError();
+            CardRift.MainSwap.Visibility = riftError is null ? Visibility.Visible : Visibility.Collapsed;
+            if (riftError is not null)
+                CardRift.IsSwapped = true;
+            SetPanelVisibility(PanRiftInfo, CardRift.IsSwapped);
+            if (selectedRift is null)
+            {
+                _vm.ShowRiftClear = false;
+                _vm.ShowRiftImage = false;
+                _vm.RiftText = riftError ?? Lang.Text("Download.Install.State.CanAdd");
+                LabRift.Foreground = ThemeManager.colorGray4;
+            }
+            else
+            {
+                _vm.ShowRiftClear = true;
+                _vm.ShowRiftImage = true;
+                _vm.RiftText = "Rift " + selectedRift.Version;
+                LabRift.Foreground = ThemeManager.colorGray1;
             }
         }
 
@@ -790,6 +831,7 @@ public partial class PageDownloadInstall
         _vanillaIcon = null;
         selectedOptiFine = null;
         selectedLiteLoader = null;
+        selectedRift = null;
         _selectedLoaderType = null;
         selectedAPIName = null;
         selectedForge = null;
@@ -845,6 +887,9 @@ public partial class PageDownloadInstall
             selectedLabyModVersion = null;
         }
 
+        if (loaderType != ModLoaderType.Rift)
+            selectedRift = null;
+
         _selectedLoaderType = loaderType;
         selectedAPIName = null;
     }
@@ -887,6 +932,8 @@ public partial class PageDownloadInstall
 
         if (selectedLiteLoader is not null) return "pack://application:,,,/images/Blocks/Egg.png";
 
+        if (selectedRift is not null) return "pack://application:,,,/images/Blocks/Egg.png";
+
         if (selectedOptiFine is not null) return "pack://application:,,,/images/Blocks/GrassPath.png";
 
         if (selectedCleanroom is not null) return "pack://application:,,,/images/Blocks/Cleanroom.png";
@@ -911,6 +958,7 @@ public partial class PageDownloadInstall
         if (selectedNeoForge is not null) name += "-NeoForge_" + selectedNeoForge.VersionName;
         if (selectedCleanroom is not null) name += "-Cleanroom_" + selectedCleanroom.VersionName;
         if (selectedLiteLoader is not null) name += "-LiteLoader";
+        if (selectedRift is not null) name += "-Rift_" + selectedRift.Version;
         if (selectedOptiFine is not null)
             name += "-OptiFine_" + selectedOptiFine.DisplayName.Replace(_vanillaName + " ", "").Replace(" ", "_");
         return name;
@@ -1131,7 +1179,7 @@ public partial class PageDownloadInstall
     /// </summary>
     private string LoadOptiFineGetError()
     {
-        if (_selectedLoaderType is ModLoaderType.NeoForge or ModLoaderType.LabyMod or ModLoaderType.Cleanroom)
+        if (_selectedLoaderType is ModLoaderType.NeoForge or ModLoaderType.LabyMod or ModLoaderType.Cleanroom or ModLoaderType.Rift)
             return Lang.Text("Download.Install.Compat.IncompatibleWithLoader", _selectedLoaderType);
         if (LoadOptiFine is null || LoadOptiFine.State.LoadingState == MyLoading.MyLoadingState.Run)
             return Lang.Text("Download.Install.State.Loading");
@@ -1280,7 +1328,7 @@ public partial class PageDownloadInstall
         // 检查 Loader
         if (GetLoaderError(LoadLiteLoader) is not null)
             return GetLoaderError(LoadLiteLoader);
-        if (_selectedLoaderType is ModLoaderType.NeoForge or ModLoaderType.LegacyFabric or ModLoaderType.LabyMod or ModLoaderType.Cleanroom)
+        if (_selectedLoaderType is ModLoaderType.NeoForge or ModLoaderType.LegacyFabric or ModLoaderType.LabyMod or ModLoaderType.Cleanroom or ModLoaderType.Rift)
             return Lang.Text("Download.Install.Compat.IncompatibleWithLoader", _selectedLoaderType);
         // 检查版本
         return ModDownload.dlLiteLoaderListLoader.output.Value.Any(v => (v.Inherit ?? "") == (_vanillaName ?? ""))
@@ -1339,6 +1387,86 @@ public partial class PageDownloadInstall
     {
         selectedLiteLoader = null;
         CardLiteLoader.IsSwapped = true;
+        e.Handled = true;
+        ReloadSelected();
+    }
+
+    #endregion
+
+    #region Rift 列表
+
+    /// <summary>
+    ///     获取 Rift 的加载异常信息。若正常则返回 Nothing。
+    /// </summary>
+    private string LoadRiftGetError()
+    {
+        // 检查 Loader
+        if (GetLoaderError(LoadRift) is not null)
+            return GetLoaderError(LoadRift);
+        if (_selectedLoaderType is not null && _selectedLoaderType != ModLoaderType.Rift)
+            return Lang.Text("Download.Install.Compat.IncompatibleWithLoader", _selectedLoaderType);
+        if (selectedOptiFine is not null)
+            return Lang.Text("Download.Install.Compat.IncompatibleWithOptiFine");
+        // 检查版本
+        return ModDownload.dlRiftListLoader.output.Value.Any(v => (v.Inherit ?? "") == (_vanillaName ?? ""))
+            ? null
+            : Lang.Text("Download.Install.State.NoVersion");
+    }
+
+    // 限制展开
+    private void CardRift_PreviewSwap(object sender, ModBase.RouteEventArgs e)
+    {
+        if (LoadRiftGetError() is not null)
+            e.handled = true;
+    }
+
+    /// <summary>
+    ///     尝试重新可视化 Rift 版本列表。
+    /// </summary>
+    private void Rift_Loaded()
+    {
+        try
+        {
+            if (ModDownload.dlRiftListLoader.State != ModBase.LoadState.Finished)
+                return;
+            // 获取版本列表
+            var versions = new List<ModDownload.DlRiftListEntry>();
+            foreach (var Version in ModDownload.dlRiftListLoader.output.Value)
+                if ((Version.Inherit ?? "") == (_vanillaName ?? ""))
+                    versions.Add(Version);
+            if (!versions.Any())
+                return;
+            // 可视化
+            PanRift.Children.Clear();
+            foreach (var Version in versions)
+                PanRift.Children.Add(ModDownloadLib.RiftDownloadListItem(Version,
+                    (a, b) => this.Rift_Selected((dynamic)a, b), true));
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(
+                ex,
+                "可视化 Rift 安装版本列表出错",
+                ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Download.Install.Error.OperationFailed"));
+        }
+    }
+
+    // 选择与清除
+    private void Rift_Selected(MyListItem sender, EventArgs e)
+    {
+        SelectModLoader(ModLoaderType.Rift);
+        selectedRift = (ModDownload.DlRiftListEntry)(dynamic)sender.Tag;
+        CardRift.IsSwapped = true;
+        ReloadSelected();
+    }
+
+    private void Rift_Clear(object sender, MouseButtonEventArgs e)
+    {
+        selectedRift = null;
+        if (_selectedLoaderType == ModLoaderType.Rift)
+            _selectedLoaderType = null;
+        CardRift.IsSwapped = true;
         e.Handled = true;
         ReloadSelected();
     }
@@ -2361,6 +2489,7 @@ public partial class PageDownloadInstall
             fabricApi = selectedFabricApi,
             optiFabric = selectedOptiFabric,
             liteLoaderEntry = selectedLiteLoader,
+            riftEntry = selectedRift,
             labyModChannel = selectedLabyModChannel,
             labyModCommitRef = selectedLabyModCommitRef,
             legacyFabricVersion = selectedLegacyFabric,

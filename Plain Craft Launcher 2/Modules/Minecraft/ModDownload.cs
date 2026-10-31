@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -1776,6 +1777,178 @@ public static class ModDownload
             throw new Exception(
                 Lang.Text("Minecraft.Download.Error.VersionListOperationFailed", "LiteLoader BMCLAPI", result), ex);
         }
+    }
+
+    #endregion
+
+    #region DlRiftList | Rift 版本列表
+
+    public struct DlRiftListResult
+    {
+        /// <summary>
+        ///     数据来源名称，如“Official”。
+        /// </summary>
+        public string sourceName;
+
+        /// <summary>
+        ///     是否为官方的实时数据。
+        /// </summary>
+        public bool isOfficial;
+
+        /// <summary>
+        ///     获取到的数据。
+        /// </summary>
+        public List<DlRiftListEntry> Value;
+
+        /// <summary>
+        ///     官方源的失败原因。若没有则为 Nothing。
+        /// </summary>
+        public Exception officialError;
+    }
+
+    public class DlRiftListEntry
+    {
+        /// <summary>
+        ///     Rift 版本号，如“1.0.4-106”。
+        /// </summary>
+        public string Version;
+
+        /// <summary>
+        ///     GitHub Release 的 Tag，如“v1.0.4-106”。
+        /// </summary>
+        public string Tag;
+
+        /// <summary>
+        ///     对应的 Minecraft 版本，如“1.13.2”。若未能读取则为 Nothing。
+        /// </summary>
+        public string Inherit;
+
+        /// <summary>
+        ///     实际的文件名，如“Rift-v1.0.4-106.jar”。
+        /// </summary>
+        public string FileName;
+
+        /// <summary>
+        ///     文件的下载地址。
+        /// </summary>
+        public string Url;
+
+        /// <summary>
+        ///     文件大小（字节）。
+        /// </summary>
+        public long Size;
+
+        /// <summary>
+        ///     是否为测试版。
+        /// </summary>
+        public bool IsPreview;
+
+        /// <summary>
+        ///     发布时间，格式为“yyyy/mm/dd HH:mm”。
+        /// </summary>
+        public string ReleaseTime;
+    }
+
+    /// <summary>
+    ///     Rift 版本列表。Rift 只在 GitHub Releases 发布，因此只有单一来源。
+    /// </summary>
+    public static ModLoader.LoaderTask<int, DlRiftListResult> dlRiftListLoader =
+        new("DlRiftList Main", DlRiftListMain);
+
+    private static void DlRiftListMain(ModLoader.LoaderTask<int, DlRiftListResult> loader)
+    {
+        loader.output = DlRiftListGet();
+    }
+
+    private static DlRiftListResult DlRiftListGet()
+    {
+        JsonArray releases;
+        try
+        {
+            releases = (JsonArray)Requester.FetchJson(
+                "https://api.github.com/repos/DimensionalDevelopment/Rift/releases?per_page=100",
+                RequestParam.WithRetry);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(
+                Lang.Text("Minecraft.Download.Error.VersionListOperationFailed", "Rift", ex.Message), ex);
+        }
+
+        var versions = new List<DlRiftListEntry>();
+        foreach (var node in releases)
+        {
+            if (node is not JsonObject release || (bool?)release["draft"] == true)
+                continue;
+            var tag = release["tag_name"]?.ToString();
+            if (string.IsNullOrWhiteSpace(tag))
+                continue;
+            // 取正式 Jar，排除 -dev、-sources、-javadoc 等附属产物
+            var asset = (release["assets"] as JsonArray)?.OfType<JsonObject>().FirstOrDefault(a =>
+            {
+                var name = a["name"]?.ToString() ?? "";
+                return name.EndsWithF(".jar", true) && !name.ContainsF("-dev") && !name.ContainsF("-sources") &&
+                       !name.ContainsF("-javadoc");
+            });
+            if (asset is null)
+                continue;
+
+            var entry = new DlRiftListEntry
+            {
+                Tag = tag,
+                Version = tag.StartsWithF("v") ? tag.Substring(1) : tag,
+                FileName = asset["name"]?.ToString(),
+                Url = asset["browser_download_url"]?.ToString(),
+                Size = (long)Math.Round(ModBase.Val(asset["size"]?.ToString() ?? "0")),
+                IsPreview = (bool?)release["prerelease"] == true
+            };
+            if (DateTime.TryParse(release["published_at"]?.ToString(), CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var publishedAt))
+                entry.ReleaseTime = publishedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
+
+            // Rift 的 profile.json 在 Jar 内，必须下载后读取才能得知它对应的 Minecraft 版本
+            if (!string.IsNullOrWhiteSpace(entry.Url))
+                try
+                {
+                    var libPath = ModLibrary.McLibGet("org.dimdev:Rift:" + entry.Version);
+                    var checker = new ModBase.FileChecker(actualSize: entry.Size <= 0L ? -1 : entry.Size);
+                    if (checker.Check(libPath) is not null)
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(libPath)!);
+                        ModNet.NetDownloadByLoader(entry.Url, libPath);
+                    }
+
+                    entry.Inherit = RiftInheritGet(libPath);
+                }
+                catch (Exception ex)
+                {
+                    ModBase.Log(ex, $"获取 Rift {entry.Version} 的版本信息失败，将不显示其对应的 Minecraft 版本");
+                }
+
+            versions.Add(entry);
+        }
+
+        if (versions.Count == 0)
+            throw new Exception(Lang.Text("Minecraft.Download.Error.NotFound"));
+
+        return new DlRiftListResult
+            { isOfficial = true, sourceName = Lang.Text("Download.Source.RiftOfficial"), Value = versions };
+    }
+
+    /// <summary>
+    ///     读取 Rift Jar 内 profile.json 的 inheritsFrom，即它所对应的 Minecraft 版本。
+    /// </summary>
+    internal static string RiftInheritGet(string jarPath)
+    {
+        using var archive = new ZipArchive(new FileStream(jarPath, FileMode.Open, FileAccess.Read, FileShare.Read));
+        var entry = archive.GetEntry("profile.json");
+        if (entry is null) throw new Exception("Rift 的 Jar 内没有 profile.json");
+        using var stream = entry.Open();
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        var profile = (JsonObject)ModBase.GetJson(reader.ReadToEnd());
+        var inherit = profile["inheritsFrom"]?.ToString();
+        if (string.IsNullOrWhiteSpace(inherit)) throw new Exception("Rift 的 profile.json 内没有 inheritsFrom");
+        return inherit;
     }
 
     #endregion

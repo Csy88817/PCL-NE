@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using System.Windows.Input;
 using PCL.Core.App.Localization;
 
@@ -29,6 +29,7 @@ public partial class PageDownloadLeft : IRefreshable
                 ModDownload.dlNeoForgeListLoader.Start(isForceRestart: true);
                 ModDownload.dlCleanroomListLoader.Start(isForceRestart: true);
                 ModDownload.dlLiteLoaderListLoader.Start(isForceRestart: true);
+                ModDownload.dlRiftListLoader.Start(isForceRestart: true);
                 ModDownload.dlFabricListLoader.Start(isForceRestart: true);
                 ModDownload.dlLegacyFabricListLoader.Start(isForceRestart: true);
                 ModDownload.dlFabricApiLoader.Start(isForceRestart: true);
@@ -156,6 +157,12 @@ public partial class PageDownloadLeft : IRefreshable
             {
                 ModDownload.dlLiteLoaderListLoader.Start(isForceRestart: true);
                 ItemLiteLoader.Checked = true;
+                break;
+            }
+            case FormMain.PageSubType.DownloadRift:
+            {
+                ModDownload.dlRiftListLoader.Start(isForceRestart: true);
+                ItemRift.Checked = true;
                 break;
             }
             case FormMain.PageSubType.DownloadFabric:
@@ -324,6 +331,12 @@ public partial class PageDownloadLeft : IRefreshable
                 if (ModMain.frmDownloadLiteLoader is null)
                     ModMain.frmDownloadLiteLoader = new PageDownloadLiteLoader();
                 return ModMain.frmDownloadLiteLoader;
+            }
+            case FormMain.PageSubType.DownloadRift:
+            {
+                if (ModMain.frmDownloadRift is null)
+                    ModMain.frmDownloadRift = new PageDownloadRift();
+                return ModMain.frmDownloadRift;
             }
             case FormMain.PageSubType.DownloadFabric:
             {
