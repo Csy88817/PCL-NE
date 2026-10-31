@@ -31,31 +31,17 @@ namespace PCL.Core.App.Localization;
 /// </summary>
 public static class Lang
 {
-    private static readonly HashSet<string> _UnrestrictedTimeZones = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "China Standard Time"
-    };
-
-    private static readonly HashSet<string> _UnrestrictedCultures = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "zh-CN"
-    };
-
     /// <summary>
     ///     当前代码侧本地化格式化使用的展示区域性。
     /// </summary>
     public static CultureInfo Culture { get; private set; } = CultureInfo.CurrentCulture;
 
     /// <summary>
-    ///     当前功能是否不受限制。
+    ///     当前功能是否不受限制。<br />
+    ///     PCL NE：恒为 <c>true</c>。上游会在受限地区（时区 + zh-CN）隐藏离线与第三方账户类型，
+    ///     并要求先完成一次正版验证才能使用；PCL NE 不再作地区限制。
     /// </summary>
-    public static bool IsFeaturesUnrestricted =>
-        Config.Debug.AllowRestrictedFeature ||
-        (
-            _UnrestrictedTimeZones.Contains(TimeZoneInfo.Local.Id) &&
-            (_UnrestrictedCultures.Contains(CultureInfo.CurrentCulture.Name) ||
-             _UnrestrictedCultures.Contains(CultureInfo.CurrentUICulture.Name))
-        );
+    public static bool IsFeaturesUnrestricted => true;
     
     /// <summary>
     ///     当前展示区域性 <see cref="Culture"/> 是否为 <c>zh-CN</c>。

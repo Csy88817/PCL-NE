@@ -137,8 +137,8 @@ public static class ModLaunch
         return;
         #endif
 
-        // 正版购买提示
-        if (!ProfileService.HasMicrosoftProfile)
+        // 正版购买提示（PCL NE：默认关闭，不再强制正版验证）
+        if (Config.Launch.ShowMicrosoftPurchaseHint && !ProfileService.HasMicrosoftProfile)
         {
             if (Lang.IsFeaturesUnrestricted)
             {

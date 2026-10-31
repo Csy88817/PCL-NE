@@ -605,6 +605,16 @@ public static partial class Config
         /// 正版登录方式。
         /// </summary>
         [ConfigItem<int>("LoginMsAuthType", 1)] public partial int LoginMsAuthType { get; set; }
+
+        /// <summary>
+        /// 自定义 Microsoft OAuth Client ID（留空则使用内置默认值）。
+        /// </summary>
+        [ConfigItem<string>("MsOAuthClientId", "", ConfigSource.Local)] public partial string MsOAuthClientId { get; set; }
+
+        /// <summary>
+        /// 在未登录正版档案时显示购买正版提示（PCL NE 默认关闭）。
+        /// </summary>
+        [ConfigItem<bool>("ShowMicrosoftPurchaseHint", false, ConfigSource.Local)] public partial bool ShowMicrosoftPurchaseHint { get; set; }
     }
 
     /// <summary>
