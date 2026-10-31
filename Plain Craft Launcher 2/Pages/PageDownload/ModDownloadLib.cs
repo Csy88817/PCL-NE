@@ -1887,7 +1887,7 @@ public static class ModDownloadLib
             Type = MyListItem.CheckType.Clickable,
             Tag = entry,
             Info = string.Join("  |  ", infoParts),
-            Logo = ModBase.pathImage + "Blocks/Egg.png"
+            Logo = ModBase.pathImage + "Blocks/Rift.png"
         };
 
         newItem.Click += onClick;

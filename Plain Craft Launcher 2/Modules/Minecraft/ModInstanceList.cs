@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -400,7 +400,7 @@ public static class ModInstanceList
                 {
                     McInstanceState.Forge, McInstanceState.NeoForge, McInstanceState.LiteLoader, McInstanceState.Fabric,
                     McInstanceState.LegacyFabric, McInstanceState.Quilt, McInstanceState.Cleanroom,
-                    McInstanceState.LabyMod
+                    McInstanceState.LabyMod, McInstanceState.Rift
                 }, McInstanceCardType.API);
 
             // 将老实例预先分类入不常用，只剩余原版、快照、OptiFine

@@ -932,7 +932,7 @@ public partial class PageDownloadInstall
 
         if (selectedLiteLoader is not null) return "pack://application:,,,/images/Blocks/Egg.png";
 
-        if (selectedRift is not null) return "pack://application:,,,/images/Blocks/Egg.png";
+        if (selectedRift is not null) return "pack://application:,,,/images/Blocks/Rift.png";
 
         if (selectedOptiFine is not null) return "pack://application:,,,/images/Blocks/GrassPath.png";
 

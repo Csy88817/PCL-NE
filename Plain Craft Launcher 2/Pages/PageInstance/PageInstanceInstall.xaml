@@ -410,7 +410,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image x:Name="ImgRift" Visibility="{Binding ShowRiftImage, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-1,0,6,0" SnapsToDevicePixels="True" Height="20"
                                        RenderOptions.BitmapScalingMode="Linear"
-                                       Source="pack://application:,,,/images/Blocks/Egg.png" />
+                                       Source="pack://application:,,,/images/Blocks/Rift.png" />
                                 <TextBlock x:Name="LabRift" Text="{Binding RiftText}" VerticalAlignment="Center"
                                            TextTrimming="CharacterEllipsis" Grid.Column="1" />
                             </Grid>

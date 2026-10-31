@@ -736,6 +736,9 @@ public class McInstance
                             Info.HasLiteLoader = true;
                         }
 
+                        // Rift
+                        if (realJson.Contains("org.dimdev.riftloader")) state = McInstanceState.Rift;
+
                         // Fabric、Forge、Quilt、LabyMod、Legacy Fabric
                         if (realJson.Contains("labymod_data"))
                         {
@@ -879,6 +882,11 @@ public class McInstance
                             Logo = ModBase.pathImage + "Blocks/Egg.png";
                             break;
                         }
+                        case McInstanceState.Rift:
+                        {
+                            Logo = ModBase.pathImage + "Blocks/Rift.png";
+                            break;
+                        }
                         case McInstanceState.Fool:
                         {
                             Logo = ModBase.pathImage + "Blocks/GoldBlock.png";
@@ -1006,6 +1014,8 @@ public class McInstance
                     : " " + this.Info.OptiFine.Replace("-", " ").Replace("_", " "));
             if (this.Info.HasLiteLoader)
                 modLoaderInfo += ", LiteLoader";
+            if (state == McInstanceState.Rift)
+                modLoaderInfo += ", Rift";
             // 基础信息
             string info;
             switch (state)
@@ -1017,6 +1027,7 @@ public class McInstance
                 case McInstanceState.Fabric:
                 case McInstanceState.OptiFine:
                 case McInstanceState.LiteLoader:
+                case McInstanceState.Rift:
                 {
                     if (this.Info.VanillaName.ContainsF("pre", true))
                         info = Lang.Text("Select.Instance.Description.PreRelease", this.Info.VanillaName);

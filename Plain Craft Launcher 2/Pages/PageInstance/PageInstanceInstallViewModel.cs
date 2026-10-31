@@ -161,7 +161,7 @@ public partial class PageInstanceInstallViewModel : ViewModelBase
 
         if (selection.HasLiteLoader) return "pack://application:,,,/images/Blocks/Egg.png";
 
-        if (selection.Rift is not null) return "pack://application:,,,/images/Blocks/Egg.png";
+        if (selection.Rift is not null) return "pack://application:,,,/images/Blocks/Rift.png";
 
         if (selection.OptiFine is not null) return "pack://application:,,,/images/Blocks/GrassPath.png";
 
