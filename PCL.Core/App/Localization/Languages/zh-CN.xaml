@@ -3779,5 +3779,7 @@
     <sys:String x:Key="Download.Plugin.Store.InstalledBadge">已安装</sys:String>
     <sys:String x:Key="Download.Plugin.Store.InstallFailed">从插件商店安装失败</sys:String>
     <sys:String x:Key="Download.Plugin.Store.Error.BadIndex">插件商店返回的数据格式不正确</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.NoMirror">插件 {0} 没有可用的镜像路径</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.HashMismatch">插件 {0} 下载后校验不一致，已放弃安装</sys:String>
 
 </ResourceDictionary>

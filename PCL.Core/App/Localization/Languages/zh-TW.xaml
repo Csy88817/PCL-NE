@@ -3670,5 +3670,7 @@
     <sys:String x:Key="Download.Plugin.Store.InstalledBadge">已安裝</sys:String>
     <sys:String x:Key="Download.Plugin.Store.InstallFailed">從外掛商店安裝失敗</sys:String>
     <sys:String x:Key="Download.Plugin.Store.Error.BadIndex">外掛商店回傳的資料格式不正確</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.NoMirror">外掛 {0} 沒有可用的鏡像路徑</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.HashMismatch">外掛 {0} 下載後校驗不一致，已放棄安裝</sys:String>
 
 </ResourceDictionary>

@@ -1,5 +1,7 @@
 using System.IO;
 using System.IO.Compression;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using PCL.Core.App;
@@ -172,6 +174,18 @@ public static class ModPlugin
     /// <summary>商店索引地址（本站 Worker 动态返回）。</summary>
     public const string StoreApi = "https://pcl-ne.simpplay.cc.cd/api/plugins";
 
+    /// <summary>
+    ///     GitHub 镜像索引。部分网络会按 SNI 重置 <c>*.simpplay.cc.cd</c> 的 TLS，
+    ///     此时回退到 api.github.com（实测这类网络下可达）。
+    /// </summary>
+    public const string StoreMirrorApi =
+        "https://api.github.com/repos/Csy88817/PCL-NE/contents/plugins-store.json?ref=ne";
+
+    /// <summary>镜像仓库与分支。</summary>
+    private const string MirrorRepo = "Csy88817/PCL-NE";
+
+    private const string MirrorRef = "ne";
+
     /// <summary>商店里的一条插件。</summary>
     public sealed class StoreEntry
     {
@@ -183,6 +197,9 @@ public static class ModPlugin
         public string Name = "";
         public string Runtime = "";
         public string Sha256 = "";
+
+        /// <summary>仓库内相对路径（GitHub 镜像用），如 <c>plugins/xxx.pclne</c>。</summary>
+        public string Path = "";
         public long Size;
         public string Tags = "";
         public string UpdatedAt = "";
@@ -204,7 +221,17 @@ public static class ModPlugin
     /// </summary>
     public static List<StoreEntry> FetchStore()
     {
-        var json = (JsonObject)Requester.FetchJson(StoreApi, RequestParam.WithRetry);
+        JsonObject json;
+        try
+        {
+            json = (JsonObject)Requester.FetchJson(StoreApi, RequestParam.WithRetry);
+        }
+        catch (Exception ex)
+        {
+            // 部分网络会按 SNI 重置本站域名（TLS 握手直接被 RST），此时回退到 GitHub 镜像索引
+            ModBase.Log(ex, "从本站读取插件商店失败，改用 GitHub 镜像索引", ModBase.LogLevel.Developer);
+            json = FetchMirrorIndex();
+        }
         if (json["plugins"] is not JsonArray list)
             throw new Exception(Lang.Text("Download.Plugin.Store.Error.BadIndex"));
 
@@ -224,6 +251,7 @@ public static class ModPlugin
                 Runtime = StoreText(item, "runtime", 32),
                 File = StoreText(item, "file", 1000),
                 Sha256 = StoreText(item, "sha256", 64),
+                Path = StoreText(item, "path", 300),
                 Tags = string.Join(" · ",
                     (item["tags"] as JsonArray)?.Select(t => t?.ToString() ?? "") ?? Array.Empty<string>()),
                 UpdatedAt = StoreText(item, "updatedAt", 32)
@@ -259,13 +287,104 @@ public static class ModPlugin
             ? new ModBase.FileChecker(minSize: 256)
             : new ModBase.FileChecker(hash: entry.Sha256.ToLowerInvariant());
         if (checker.Check(target) is not null)
-            ModNet.NetDownloadByLoader(new[] { entry.File }, target, check: checker);
+        {
+            var ok = false;
+            if (!string.IsNullOrWhiteSpace(entry.File))
+                try
+                {
+                    ModNet.NetDownloadByLoader(new[] { entry.File }, target, check: checker);
+                    ok = HashMatches(entry, target);
+                    if (!ok)
+                        ModBase.Log($"[Plugin] {entry.Id} 从本站下载到的文件校验不一致，改用 GitHub 镜像",
+                            ModBase.LogLevel.Developer);
+                }
+                catch (Exception ex)
+                {
+                    // 本站域名在部分网络被按 SNI 重置，回退到 GitHub 镜像
+                    ModBase.Log(ex, "从本站下载插件失败，改用 GitHub 镜像：" + entry.Id, ModBase.LogLevel.Developer);
+                }
+
+            if (!ok)
+                DownloadFromMirror(entry, target);
+            VerifyHash(entry, target);
+        }
 
         var installed = Install(target, true);
         if (installed.IsCodePlugin)
             PluginHost.Load(installed);
         ModBase.Log($"[Plugin] 已从商店安装 {installed.Id} {installed.Version}");
         return installed;
+    }
+
+    /// <summary>读取 GitHub 镜像索引（contents 接口返回 base64 的 JSON 文本）。</summary>
+    private static JsonObject FetchMirrorIndex()
+    {
+        var json = (JsonObject)Requester.FetchJson(StoreMirrorApi, RequestParam.WithRetry);
+        return DecodeContentsJson(json, "plugins-store.json");
+    }
+
+    /// <summary>把 contents 接口返回的 base64 内容解成 JSON 对象。</summary>
+    private static JsonObject DecodeContentsJson(JsonObject contents, string what)
+    {
+        var content = contents?["content"]?.ToString() ?? "";
+        if (string.IsNullOrWhiteSpace(content))
+            throw new Exception(Lang.Text("Download.Plugin.Store.Error.BadIndex") + " (" + what + ")");
+        var text = Encoding.UTF8.GetString(Convert.FromBase64String(content.Replace("\n", "").Replace("\r", "")));
+        return (JsonObject)ModBase.GetJson(text);
+    }
+
+    /// <summary>
+    ///     通过 GitHub contents → git blobs 接口把插件包取回本地。
+    ///     这条通道只依赖 api.github.com，在被按 SNI 重置本站域名的网络里仍然可用。
+    /// </summary>
+    private static void DownloadFromMirror(StoreEntry entry, string target)
+    {
+        var path = (entry.Path ?? "").Trim();
+        if (string.IsNullOrWhiteSpace(path))
+            throw new Exception(Lang.Text("Download.Plugin.Store.Error.NoMirror", entry.Id));
+
+        var contents = (JsonObject)Requester.FetchJson(
+            $"https://api.github.com/repos/{MirrorRepo}/contents/{path}?ref={MirrorRef}", RequestParam.WithRetry);
+        var blobSha = contents?["sha"]?.ToString() ?? "";
+        if (string.IsNullOrWhiteSpace(blobSha))
+            throw new Exception(Lang.Text("Download.Plugin.Store.Error.NoMirror", entry.Id));
+
+        // contents 接口对超过 1 MB 的文件不内联内容，所以统一走 blobs 接口
+        var blob = (JsonObject)Requester.FetchJson(
+            $"https://api.github.com/repos/{MirrorRepo}/git/blobs/{blobSha}", RequestParam.WithRetry);
+        var content = blob?["content"]?.ToString() ?? "";
+        if (string.IsNullOrWhiteSpace(content))
+            throw new Exception(Lang.Text("Download.Plugin.Store.Error.NoMirror", entry.Id));
+
+        var bytes = Convert.FromBase64String(content.Replace("\n", "").Replace("\r", ""));
+        File.WriteAllBytes(target, bytes);
+        ModBase.Log($"[Plugin] 已从 GitHub 镜像取回 {entry.Id}（{bytes.Length} 字节）", ModBase.LogLevel.Developer);
+    }
+
+    /// <summary>本地文件的 SHA-256 是否与索引一致（索引没给摘要时只要求非空文件）。</summary>
+    private static bool HashMatches(StoreEntry entry, string target)
+    {
+        try
+        {
+            if (!File.Exists(target))
+                return false;
+            if (string.IsNullOrWhiteSpace(entry.Sha256))
+                return new FileInfo(target).Length > 0;
+            using var stream = File.OpenRead(target);
+            var actual = Convert.ToHexString(SHA256.HashData(stream));
+            return actual.Equals(entry.Sha256, StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>校验失败就抛异常，绝不把来路不明的包装进插件目录。</summary>
+    private static void VerifyHash(StoreEntry entry, string target)
+    {
+        if (!HashMatches(entry, target))
+            throw new InvalidDataException(Lang.Text("Download.Plugin.Store.Error.HashMismatch", entry.Id));
     }
 
     private static string StoreText(JsonObject json, string key, int maxLength)

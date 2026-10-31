@@ -3779,5 +3779,7 @@
     <sys:String x:Key="Download.Plugin.Store.InstalledBadge">Installed</sys:String>
     <sys:String x:Key="Download.Plugin.Store.InstallFailed">Failed to install from the plugin store</sys:String>
     <sys:String x:Key="Download.Plugin.Store.Error.BadIndex">The plugin store returned malformed data</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.NoMirror">The plugin {0} has no usable mirror path</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.HashMismatch">The plugin {0} failed its checksum after download; installation was abandoned</sys:String>
 
 </ResourceDictionary>
