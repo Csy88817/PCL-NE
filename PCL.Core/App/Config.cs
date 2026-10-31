@@ -304,6 +304,12 @@ public static partial class Config
             /// 传说中的主题选择，但是没卵用。
             /// </summary>
             [ConfigItem<int>("UiLauncherTheme", 0, ConfigSource.Local)] public partial int ThemeSelected { get; set; }
+
+            /// <summary>
+            /// 主题颜色跟随系统浅色/深色自动切换。<br/>
+            /// 开启后，系统的应用主题（AppsUseLightTheme）发生变化时会自动把启动器切换为对应的浅色/深色主题；启动时也会按系统主题应用一次。
+            /// </summary>
+            [ConfigItem<bool>("UiFollowSystemTheme", false, ConfigSource.Local)] public partial bool FollowSystemTheme { get; set; }
         }
 
         /// <summary>

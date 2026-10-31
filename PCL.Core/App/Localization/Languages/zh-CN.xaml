@@ -3708,4 +3708,76 @@
     <sys:String x:Key="Minecraft.Download.Stage.DownloadRiftLibraries">下载 Rift 支持库文件</sys:String>
     <sys:String x:Key="Select.Instance.Card.Rift">Rift 实例</sys:String>
 
+    <!-- MCJS 网页版 -->
+    <sys:String x:Key="Download.Left.Mcjs">MCJS</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Title">MCJS 网页版 Minecraft</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Description">MCJS 是 Eaglercraft（网页版 Minecraft）的简体中文汉化整合站，打开网页就能玩，不需要下载 Java 或启动器。PCL NE 只提供版本与线路入口，不托管也不下载任何游戏文件。</sys:String>
+    <sys:String x:Key="Download.Mcjs.OpenWebsite">访问 MCJS 官网</sys:String>
+    <sys:String x:Key="Download.Mcjs.Mirror.Tooltip">切换到其它线路</sys:String>
+    <!-- 工具箱：一键打开目录 -->
+    <sys:String x:Key="Tools.Test.OpenFolder.Title">一键打开目录</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Mods">打开 mods 文件夹</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Mods.ToolTip">打开当前实例的 mods 文件夹</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Instance">打开实例目录</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Instance.ToolTip">打开当前实例所在的文件夹</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Logs">打开日志目录</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Logs.ToolTip">打开启动器日志所在的文件夹</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Minecraft">打开 Minecraft 目录</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Minecraft.ToolTip">打开当前 .minecraft 根目录</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.NoInstance">没有选中任何实例</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.NoPath">日志目录不可用</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Failed">打开文件夹失败</sys:String>
+
+    <!-- 启动器插件（.pclne） -->
+    <sys:String x:Key="Download.Left.Plugin">插件</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Title">启动器插件</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Description">插件是 .pclne 文件（本质是 zip 包，根目录含 manifest.json），用来给启动器补充信息与入口。PCL NE 的插件是声明式的：只读取并展示清单里声明的名称、作者、说明、图标与链接，不会执行插件内的任何代码，因此它碰不到你的账号、存档与启动流程。</sys:String>
+    <sys:String x:Key="Download.Plugin.Import">导入 .pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder">打开插件目录</sys:String>
+    <sys:String x:Key="Download.Plugin.ListTitle">已安装插件 ({0})</sys:String>
+    <sys:String x:Key="Download.Plugin.Empty">还没有安装任何插件。点上面的「导入 .pclne」选一个插件包试试。</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenHomepage">打开插件主页</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder.Button">打开插件目录</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall">卸载插件</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall.Confirm.Message">确定要卸载插件「{0}」吗？它的文件会被删除。</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall.Confirm.Title">卸载插件</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstalled">已卸载插件 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Imported">已导入插件 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.Failed">导入插件失败</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.AlreadyExists">已经装过同 id 的插件 {0}。继续会用新版本覆盖它，确定吗？</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.AlreadyExists.Title">插件已存在</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.FileFilter">PCL NE 插件文件(*.pclne)|*.pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.SelectTitle">选择要导入的 .pclne 插件</sys:String>
+    <sys:String x:Key="Download.Plugin.OperationFailed">插件操作失败</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.FileMissing">插件文件不存在或无法读取</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.NoManifest">这个包里没有 manifest.json，不是有效的 .pclne 插件</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.InvalidManifest">插件的 manifest.json 格式不正确</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.InvalidId">插件的 id「{0}」不合法：只能用字母数字与 . _ -，需字母数字开头，且不超过 64 字符</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.UnsafeEntry">插件包含不安全的路径（{0}），已拒绝安装</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.TooLarge">插件解压后体积过大，已拒绝安装</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.TooManyFiles">插件内文件过多（{0} 个），已拒绝安装</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.LauncherTooOld">这个插件要求启动器版本代码至少 {0}，当前是 {1}</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.AlreadyExists">已经装过插件 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeBadge">会执行代码</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeWarning.Title">这个插件会执行代码</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeWarning.Message">插件「{0}」声明了 runtime=dotnet，导入后它会以启动器自身的权限运行代码，可以读写文件、访问网络。请只安装来源可信的插件。确定要继续吗？</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.LoadFailed">加载代码插件 {0} 失败</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.AssemblyMissing">找不到插件里的程序集：manifest 的 entry 要写成「命名空间.类型名, 程序集名」，且程序集需放在插件根目录</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.EntryNotFound">找不到插件的入口类型 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.EntryLoadMissing">插件的入口类型 {0} 缺少 public void Load(object host) 方法</sys:String>
+    <!-- 插件商店 -->
+    <sys:String x:Key="Download.Left.PluginStore">插件商店</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Title">插件商店</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Description">从 PCL NE 官方插件商店浏览与安装插件。商店索引与插件包都由本站提供，安装后立刻生效；标记了「会执行代码」的插件会在安装前再确认一次。</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.OpenWebsite">打开网页商店</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.LoadingList">正在获取插件商店列表</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.ListTitle">商店插件 ({0})</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Empty">商店里现在还没有插件。</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Install">从商店安装</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Installing">正在安装插件 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Installed">已安装插件 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.InstalledBadge">已安装</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.InstallFailed">从插件商店安装失败</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.BadIndex">插件商店返回的数据格式不正确</sys:String>
+
 </ResourceDictionary>

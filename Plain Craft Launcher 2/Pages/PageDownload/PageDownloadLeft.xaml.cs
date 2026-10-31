@@ -165,6 +165,24 @@ public partial class PageDownloadLeft : IRefreshable
                 ItemRift.Checked = true;
                 break;
             }
+            case FormMain.PageSubType.DownloadMcjs:
+            {
+                // MCJS 页面用静态数据，不需要启动任何加载器
+                ItemMcjs.Checked = true;
+                break;
+            }
+            case FormMain.PageSubType.DownloadPlugin:
+            {
+                // 插件页面读本地插件目录，也不需要加载器
+                ItemPlugin.Checked = true;
+                break;
+            }
+            case FormMain.PageSubType.DownloadPluginStore:
+            {
+                ModPlugin.StoreLoader.Start(isForceRestart: true);
+                ItemPluginStore.Checked = true;
+                break;
+            }
             case FormMain.PageSubType.DownloadFabric:
             {
                 ModDownload.dlFabricListLoader.Start(isForceRestart: true);
@@ -337,6 +355,24 @@ public partial class PageDownloadLeft : IRefreshable
                 if (ModMain.frmDownloadRift is null)
                     ModMain.frmDownloadRift = new PageDownloadRift();
                 return ModMain.frmDownloadRift;
+            }
+            case FormMain.PageSubType.DownloadMcjs:
+            {
+                if (ModMain.frmDownloadMcjs is null)
+                    ModMain.frmDownloadMcjs = new PageDownloadMcjs();
+                return ModMain.frmDownloadMcjs;
+            }
+            case FormMain.PageSubType.DownloadPlugin:
+            {
+                if (ModMain.frmDownloadPlugin is null)
+                    ModMain.frmDownloadPlugin = new PageDownloadPlugin();
+                return ModMain.frmDownloadPlugin;
+            }
+            case FormMain.PageSubType.DownloadPluginStore:
+            {
+                if (ModMain.frmDownloadPluginStore is null)
+                    ModMain.frmDownloadPluginStore = new PageDownloadPluginStore();
+                return ModMain.frmDownloadPluginStore;
             }
             case FormMain.PageSubType.DownloadFabric:
             {

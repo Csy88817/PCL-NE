@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -423,6 +423,16 @@ public static class ModWatcher
                     }
 
                     GameExit?.Invoke();
+                    // 通知插件：游戏进程已退出
+                    try
+                    {
+                        PluginHost.RaiseGameExited(gameProcess.ExitCode);
+                    }
+                    catch (Exception ex)
+                    {
+                        ModBase.Log(ex, "触发插件的 GameExited 事件失败", ModBase.LogLevel.Developer);
+                    }
+
                     // If Process.ExitCode = 1 Then
                     // '返回值为 1，考虑是任务管理器结束
                     // WatcherLog("Minecraft 返回值为 1，考虑为任务管理器结束") '并不，崩了照样是 1

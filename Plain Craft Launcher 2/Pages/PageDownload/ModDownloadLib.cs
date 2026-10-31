@@ -1647,7 +1647,7 @@ public static class ModDownloadLib
             if (string.IsNullOrWhiteSpace(entry.Url))
                 throw new Exception(Lang.Text("Minecraft.Download.Error.RiftProfileMissing", entry.Version));
             Directory.CreateDirectory(Path.GetDirectoryName(libPath)!);
-            ModNet.NetDownloadByLoader(entry.Url, libPath);
+            ModNet.NetDownloadByLoader(entry.Urls ?? new List<string> { entry.Url }, libPath);
         }
 
         entry.Inherit = ModDownload.RiftInheritGet(libPath);
@@ -1754,7 +1754,7 @@ public static class ModDownloadLib
                 new LoaderDownload(Lang.Text("Minecraft.Download.Stage.DownloadMainFile"),
                         new List<DownloadFile>
                         {
-                            new(new[] { downloadInfo.Url }, target, new ModBase.FileChecker(minSize: 1024))
+                            new(downloadInfo.Urls ?? new List<string> { downloadInfo.Url }, target, new ModBase.FileChecker(minSize: 1024))
                         })
                     { ProgressWeight = 15d }
             };

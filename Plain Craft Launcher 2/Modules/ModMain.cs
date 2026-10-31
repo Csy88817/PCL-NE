@@ -49,6 +49,9 @@ public static class ModMain
     public static PageDownloadLabyMod? frmDownloadLabyMod;
     public static PageDownloadLegacyFabric? frmDownloadLegacyFabric;
     public static PageDownloadRift? frmDownloadRift;
+    public static PageDownloadMcjs? frmDownloadMcjs;
+    public static PageDownloadPlugin? frmDownloadPlugin;
+    public static PageDownloadPluginStore? frmDownloadPluginStore;
     public static PageDownloadMod? frmDownloadMod;
     public static PageDownloadPack? frmDownloadPack;
     public static PageDownloadDataPack? frmDownloadDataPack;

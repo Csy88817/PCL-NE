@@ -525,6 +525,7 @@ public partial class FormMain
         ModBase.RunInUiWait(() =>
         {
             // 清理视频背景
+            AnimatedImageBackground.StopCurrent();
             VideoBack.Stop();
             VideoBack.Source = null;
             VideoBack.Close();
@@ -1442,6 +1443,9 @@ public partial class FormMain
         DownloadLabyMod = 17,
         DownloadLegacyFabric = 18,
         DownloadRift = 19,
+        DownloadMcjs = 20,
+        DownloadPlugin = 21,
+        DownloadPluginStore = 22,
 
         SetupLaunch = 0,
         SetupUI = 1,

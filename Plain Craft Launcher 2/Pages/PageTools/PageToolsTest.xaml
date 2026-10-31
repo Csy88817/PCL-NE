@@ -26,6 +26,37 @@
                                     Margin="0,0,15,15" Click="BtnLaunchCount_Click" />
                 </WrapPanel>
             </local:MyCard>
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Tools.Test.OpenFolder.Title}">
+                <StackPanel Margin="25,40,25,5">
+                    <TextBlock Text="{DynamicResource Tools.Test.OpenFolder.NoInstance}"
+                               TextWrapping="Wrap" Opacity="0.65" Margin="0,0,0,10"
+                               Visibility="{Binding OpenFolderHintVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <WrapPanel ItemHeight="50">
+                        <local:MyButton MinWidth="130"
+                                        Text="{DynamicResource Tools.Test.OpenFolder.Mods}"
+                                        ToolTip="{DynamicResource Tools.Test.OpenFolder.Mods.ToolTip}"
+                                        Margin="0,0,15,15"
+                                        IsEnabled="{Binding OpenInstanceFolderEnabled}"
+                                        Click="BtnOpenModsFolder_Click" />
+                        <local:MyButton MinWidth="130"
+                                        Text="{DynamicResource Tools.Test.OpenFolder.Instance}"
+                                        ToolTip="{DynamicResource Tools.Test.OpenFolder.Instance.ToolTip}"
+                                        Margin="0,0,15,15"
+                                        IsEnabled="{Binding OpenInstanceFolderEnabled}"
+                                        Click="BtnOpenInstanceFolder_Click" />
+                        <local:MyButton MinWidth="130"
+                                        Text="{DynamicResource Tools.Test.OpenFolder.Logs}"
+                                        ToolTip="{DynamicResource Tools.Test.OpenFolder.Logs.ToolTip}"
+                                        Margin="0,0,15,15"
+                                        Click="BtnOpenLogFolder_Click" />
+                        <local:MyButton MinWidth="130"
+                                        Text="{DynamicResource Tools.Test.OpenFolder.Minecraft}"
+                                        ToolTip="{DynamicResource Tools.Test.OpenFolder.Minecraft.ToolTip}"
+                                        Margin="0,0,15,15"
+                                        Click="BtnOpenMinecraftFolder_Click" />
+                    </WrapPanel>
+                </StackPanel>
+            </local:MyCard>
             <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Tools.Test.CustomDownload.Title}">
                 <StackPanel Orientation="Vertical" Margin="25,40,25,20">
                     <TextBlock Text="{DynamicResource Tools.Test.CustomDownload.Description}"

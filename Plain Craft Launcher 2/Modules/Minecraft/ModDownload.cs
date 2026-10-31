@@ -1834,6 +1834,12 @@ public static class ModDownload
         public string Url;
 
         /// <summary>
+        ///     按优先级排列的下载地址列表（第一项为本站 GitHub 加速通道，最后一项为 GitHub 原地址）。
+        ///     为空时回退到 <see cref="Url" />。
+        /// </summary>
+        public List<string> Urls;
+
+        /// <summary>
         ///     文件大小（字节）。
         /// </summary>
         public long Size;
@@ -1875,7 +1881,11 @@ public static class ModDownload
                 Lang.Text("Minecraft.Download.Error.VersionListOperationFailed", "Rift", ex.Message), ex);
         }
 
-        var versions = new List<DlRiftListEntry>();
+        // 本站的 GitHub Release 加速通道（Worker 代理 + 边缘缓存），国内直连 GitHub 失败时可用
+        const string mirrorPrefix = "https://pcl-ne.simpplay.cc.cd/gh/DimensionalDevelopment/Rift/releases/download/";
+
+        // 先收集全部候选（此阶段不下载任何文件）
+        var candidates = new List<DlRiftListEntry>();
         foreach (var node in releases)
         {
             if (node is not JsonObject release || (bool?)release["draft"] == true)
@@ -1905,17 +1915,37 @@ public static class ModDownload
             if (DateTime.TryParse(release["published_at"]?.ToString(), CultureInfo.InvariantCulture,
                     DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var publishedAt))
                 entry.ReleaseTime = publishedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm");
+            candidates.Add(entry);
+        }
 
+        // Rift 在 GitHub 上有 50 多个构建，逐个下载 jar 读 profile.json 会变成 50 次下载，太重。
+        // 同一条版本线（如 1.0.4-x）对应的 Minecraft 版本相同，因此每条线只保留最新构建。
+        var lines = new Dictionary<string, DlRiftListEntry>();
+        foreach (var entry in candidates)
+        {
+            var separator = entry.Version.LastIndexOfF("-");
+            var line = separator > 0 ? entry.Version.Substring(0, separator) : entry.Version;
+            if (!lines.TryGetValue(line, out var current) || RiftBuildIsNewer(entry, current))
+                lines[line] = entry;
+        }
+
+        var versions = new List<DlRiftListEntry>();
+        foreach (var entry in lines.Values)
+        {
             // Rift 的 profile.json 在 Jar 内，必须下载后读取才能得知它对应的 Minecraft 版本
             if (!string.IsNullOrWhiteSpace(entry.Url))
                 try
                 {
+                    entry.Urls = new List<string>
+                    {
+                        mirrorPrefix + entry.Tag + "/" + Uri.EscapeDataString(entry.FileName ?? ""), entry.Url
+                    };
                     var libPath = ModLibrary.McLibGet("org.dimdev:Rift:" + entry.Version);
                     var checker = new ModBase.FileChecker(actualSize: entry.Size <= 0L ? -1 : entry.Size);
                     if (checker.Check(libPath) is not null)
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(libPath)!);
-                        ModNet.NetDownloadByLoader(entry.Url, libPath);
+                        ModNet.NetDownloadByLoader(entry.Urls, libPath);
                     }
 
                     entry.Inherit = RiftInheritGet(libPath);
@@ -1928,11 +1958,25 @@ public static class ModDownload
             versions.Add(entry);
         }
 
+        versions = versions.OrderByDescending(entry => entry.ReleaseTime ?? "").ToList();
+
         if (versions.Count == 0)
             throw new Exception(Lang.Text("Minecraft.Download.Error.NotFound"));
 
         return new DlRiftListResult
             { isOfficial = true, sourceName = Lang.Text("Download.Source.RiftOfficial"), Value = versions };
+    }
+
+    /// <summary>
+    ///     比较两个 Rift 构建的新旧：先比发布时间，同一时间则非测试版优先。
+    /// </summary>
+    private static bool RiftBuildIsNewer(DlRiftListEntry candidate, DlRiftListEntry current)
+    {
+        var left = candidate.ReleaseTime ?? "";
+        var right = current.ReleaseTime ?? "";
+        if (left != right)
+            return string.CompareOrdinal(left, right) > 0;
+        return current.IsPreview && !candidate.IsPreview;
     }
 
     /// <summary>

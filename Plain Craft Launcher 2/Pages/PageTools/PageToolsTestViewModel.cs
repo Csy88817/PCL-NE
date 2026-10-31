@@ -16,6 +16,10 @@ public partial class PageToolsTestViewModel : ViewModelBase
 
     [ObservableProperty] private bool _downloadStartEnabled = true;
 
+    [ObservableProperty] private bool _openFolderHintVisible = true;
+
+    [ObservableProperty] private bool _openInstanceFolderEnabled;
+
     [ObservableProperty] private bool _skinPreviewVisible;
 
     public PageToolsTestViewModel()
@@ -34,5 +38,12 @@ public partial class PageToolsTestViewModel : ViewModelBase
     {
         DownloadStartEnabled = folderValid && urlValid && nameValid;
         DownloadOpenEnabled = folderValid;
+    }
+
+    /// <summary>根据是否存在当前实例，刷新「一键打开目录」中依赖实例的按钮状态。</summary>
+    public void RefreshOpenFolderButtons(bool hasInstance)
+    {
+        OpenInstanceFolderEnabled = hasInstance;
+        OpenFolderHintVisible = !hasInstance;
     }
 }

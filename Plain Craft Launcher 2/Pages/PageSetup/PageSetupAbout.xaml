@@ -18,6 +18,122 @@
             x:Name="PanMain"
             Margin="25,10"
             Grid.IsSharedSizeScope="True">
+            <local:MyCard
+                Margin="0,15,0,0"
+                CanSwap="True"
+                DataContext="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=local:PageSetupAbout}}"
+                Title="{Binding BuildInfoTitle}">
+                <StackPanel Margin="25,39,23,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="Auto"
+                                MinWidth="130"
+                                SharedSizeGroup="BuildInfoLabel" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="0,5"
+                            FontWeight="Bold"
+                            Text="{Binding VersionLabel}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Grid.ColumnSpan="2"
+                            Margin="0,5"
+                            LineHeight="17"
+                            Text="{Binding VersionInfo}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,5"
+                            FontWeight="Bold"
+                            Text="{Binding CommitLabel}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Grid.ColumnSpan="2"
+                            Margin="0,5"
+                            LineHeight="17"
+                            Text="{Binding CommitInfo}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0,5"
+                            FontWeight="Bold"
+                            Text="{Binding ExecutableLabel}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Grid.ColumnSpan="2"
+                            Margin="0,5"
+                            LineHeight="17"
+                            Text="{Binding ExecutableInfo}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="0,5"
+                            FontWeight="Bold"
+                            Text="{Binding HashLabel}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="2"
+                            Margin="0,5"
+                            FontFamily="Consolas"
+                            FontSize="12"
+                            LineHeight="18"
+                            Text="{Binding SelfHashDisplay}"
+                            TextWrapping="Wrap" />
+                        <local:MyButton
+                            x:Name="BtnCopyHash"
+                            Grid.Row="3"
+                            Grid.Column="3"
+                            Height="30"
+                            MinWidth="70"
+                            Margin="12,3,0,3"
+                            Padding="13,0"
+                            VerticalAlignment="Top"
+                            Click="BtnCopyHash_Click"
+                            IsEnabled="{Binding HasSelfHash}"
+                            Text="{Binding CopyButtonText}" />
+                    </Grid>
+                    <TextBlock
+                        Margin="0,16,0,4"
+                        FontWeight="Bold"
+                        Text="{Binding SignatureTitle}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        LineHeight="17"
+                        Text="{Binding SignatureInfo}"
+                        TextWrapping="Wrap" />
+                    <local:MyButton
+                        Height="35"
+                        MinWidth="170"
+                        HorizontalAlignment="Left"
+                        local:CustomEventService.EventData="https://github.com/Csy88817/PCL-NE/releases"
+                        local:CustomEventService.EventType="OpenUrl"
+                        Padding="13,0"
+                        Text="{Binding OpenReleaseButtonText}" />
+                </StackPanel>
+            </local:MyCard>
             <local:MyCard Margin="0,15" Title="{DynamicResource Setup.About.Title}">
                 <Grid Margin="21,40,21,16">
                     <Grid.RowDefinitions>

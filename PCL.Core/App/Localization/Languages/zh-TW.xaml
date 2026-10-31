@@ -3599,4 +3599,76 @@
     <sys:String x:Key="Minecraft.Download.Stage.DownloadRiftLibraries">下載 Rift 支援庫檔案</sys:String>
     <sys:String x:Key="Select.Instance.Card.Rift">Rift 實例</sys:String>
 
+    <!-- MCJS 網頁版 -->
+    <sys:String x:Key="Download.Left.Mcjs">MCJS</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Title">MCJS 網頁版 Minecraft</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Description">MCJS 是 Eaglercraft（網頁版 Minecraft）的簡體中文漢化整合站，打開網頁就能玩，不需要下載 Java 或啟動器。PCL NE 只提供版本與線路入口，不托管也不下載任何遊戲檔案。</sys:String>
+    <sys:String x:Key="Download.Mcjs.OpenWebsite">前往 MCJS 官網</sys:String>
+    <sys:String x:Key="Download.Mcjs.Mirror.Tooltip">切換到其它線路</sys:String>
+    <!-- 工具箱：一鍵開啟目錄 -->
+    <sys:String x:Key="Tools.Test.OpenFolder.Title">一鍵開啟目錄</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Mods">開啟 mods 資料夾</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Mods.ToolTip">開啟目前實例的 mods 資料夾</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Instance">開啟實例目錄</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Instance.ToolTip">開啟目前實例所在的資料夾</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Logs">開啟日誌目錄</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Logs.ToolTip">開啟啟動器日誌所在的資料夾</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Minecraft">開啟 Minecraft 目錄</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Minecraft.ToolTip">開啟目前 .minecraft 根目錄</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.NoInstance">沒有選中任何實例</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.NoPath">日誌目錄無法使用</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Failed">開啟資料夾失敗</sys:String>
+
+    <!-- 啟動器外掛（.pclne） -->
+    <sys:String x:Key="Download.Left.Plugin">外掛</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Title">啟動器外掛</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Description">外掛是 .pclne 檔案（本質是 zip 包，根目錄含 manifest.json），用來給啟動器補充資訊與入口。PCL NE 的外掛是宣告式的：只讀取並展示清單裡宣告的名稱、作者、說明、圖示與連結，不會執行外掛內的任何程式碼，因此它碰不到你的帳號、存檔與啟動流程。</sys:String>
+    <sys:String x:Key="Download.Plugin.Import">匯入 .pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder">開啟外掛目錄</sys:String>
+    <sys:String x:Key="Download.Plugin.ListTitle">已安裝外掛 ({0})</sys:String>
+    <sys:String x:Key="Download.Plugin.Empty">還沒有安裝任何外掛。點上面的「匯入 .pclne」選一個外掛包試試。</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenHomepage">開啟外掛首頁</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder.Button">開啟外掛目錄</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall">移除外掛</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall.Confirm.Message">確定要移除外掛「{0}」嗎？它的檔案會被刪除。</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall.Confirm.Title">移除外掛</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstalled">已移除外掛 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Imported">已匯入外掛 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.Failed">匯入外掛失敗</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.AlreadyExists">已經裝過同 id 的外掛 {0}。繼續會用新版本覆蓋它，確定嗎？</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.AlreadyExists.Title">外掛已存在</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.FileFilter">PCL NE 外掛檔案(*.pclne)|*.pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.SelectTitle">選擇要匯入的 .pclne 外掛</sys:String>
+    <sys:String x:Key="Download.Plugin.OperationFailed">外掛操作失敗</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.FileMissing">外掛檔案不存在或無法讀取</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.NoManifest">這個包裡沒有 manifest.json，不是有效的 .pclne 外掛</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.InvalidManifest">外掛的 manifest.json 格式不正確</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.InvalidId">外掛的 id「{0}」不合法：只能用字母數字與 . _ -，需字母數字開頭，且不超過 64 字元</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.UnsafeEntry">外掛包含不安全的路徑（{0}），已拒絕安裝</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.TooLarge">外掛解壓後體積過大，已拒絕安裝</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.TooManyFiles">外掛內檔案過多（{0} 個），已拒絕安裝</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.LauncherTooOld">這個外掛要求啟動器版本代碼至少 {0}，目前是 {1}</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.AlreadyExists">已經裝過外掛 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeBadge">會執行程式碼</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeWarning.Title">這個外掛會執行程式碼</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeWarning.Message">外掛「{0}」宣告了 runtime=dotnet，匯入後它會以啟動器自身的權限執行程式碼，可以讀寫檔案、存取網路。請只安裝來源可信的外掛。確定要繼續嗎？</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.LoadFailed">載入程式碼外掛 {0} 失敗</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.AssemblyMissing">找不到外掛裡的組件：manifest 的 entry 要寫成「命名空間.型別名, 組件名」，且組件需放在外掛根目錄</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.EntryNotFound">找不到外掛的入口型別 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.EntryLoadMissing">外掛的入口型別 {0} 缺少 public void Load(object host) 方法</sys:String>
+    <!-- 外掛商店 -->
+    <sys:String x:Key="Download.Left.PluginStore">外掛商店</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Title">外掛商店</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Description">從 PCL NE 官方外掛商店瀏覽與安裝外掛。商店索引與外掛包都由本站提供，安裝後立刻生效；標記了「會執行程式碼」的外掛會在安裝前再確認一次。</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.OpenWebsite">開啟網頁商店</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.LoadingList">正在取得外掛商店清單</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.ListTitle">商店外掛 ({0})</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Empty">商店裡現在還沒有外掛。</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Install">從商店安裝</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Installing">正在安裝外掛 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Installed">已安裝外掛 {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.InstalledBadge">已安裝</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.InstallFailed">從外掛商店安裝失敗</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.BadIndex">外掛商店回傳的資料格式不正確</sys:String>
+
 </ResourceDictionary>

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -58,6 +58,12 @@ public partial class PageSetupUI
             ComboDarkColor.SelectedIndex = (int)Config.Preference.Theme.DarkColor;
             ComboLightColor.SelectedIndex = (int)Config.Preference.Theme.LightColor;
             CheckShowLaunchingHint.Checked = Config.Preference.ShowLaunchingHint;
+
+            // 主题颜色跟随系统
+            CheckFollowSystemTheme.Text = LangTextOrFallback("Setup.Ui.Theme.FollowSystemTheme", "主题颜色跟随系统浅色/深色");
+            CheckFollowSystemTheme.ToolTip =
+                LangTextOrFallback("Setup.Ui.Theme.FollowSystemTheme.ToolTip", "系统应用主题在浅色与深色之间切换时，自动切换启动器的浅色/深色主题");
+            CheckFollowSystemTheme.Checked = Config.Preference.Theme.FollowSystemTheme;
 
             // 字体设置
             ComboUiFont.SelectedFontTag = Config.Preference.Font;
@@ -240,6 +246,24 @@ public partial class PageSetupUI
         ConfigService.TrySetValue(tag, value);
     }
 
+    /// <summary>
+    /// 读取本地化文本；资源键缺失时（调试构建返回 <c>!key!</c>，发布构建返回键名本身）回退到内置文案。
+    /// </summary>
+    private static string LangTextOrFallback(string key, string fallback)
+    {
+        try
+        {
+            var text = Lang.Text(key);
+            if (string.IsNullOrWhiteSpace(text) || text == key || text.StartsWith('!'))
+                return fallback;
+            return text;
+        }
+        catch
+        {
+            return fallback;
+        }
+    }
+
     private void ComboFontChange(object sender, SelectionChangedEventArgs e)
     {
         if (!ModAnimation.AniExitsAnyControl()) Config.Preference.Font = ComboUiFont.SelectedFontTag;
@@ -349,6 +373,7 @@ public partial class PageSetupUI
             {
                 if (refresh)
                 {
+                    AnimatedImageBackground.StopCurrent();
                     if (ModMain.frmMain.ImgBack.Visibility == Visibility.Collapsed)
                     {
                         if (isHint)
@@ -374,12 +399,22 @@ public partial class PageSetupUI
                     {
                         ModMain.frmMain.ImgBack.Background = null;
                         ModVideoBack.VideoStop();
+                        AnimatedImageBackground.StopCurrent();
                         ModBase.Log("[UI] 加载背景内容：" + address);
-                        ModMain.frmMain.ImgBack.Background = new MyBitmap(address);
+                        // 动图（GIF / 动画 WebP）会自行接管逐帧播放；其余文件继续按原有的静态图片逻辑加载
+                        var isAnimated = AnimatedImageBackground.TryPlay(address, ModMain.frmMain.ImgBack);
+                        if (!isAnimated)
+                            ModMain.frmMain.ImgBack.Background = new MyBitmap(address);
                         _ = Config.Preference.Background.WallpaperSuitMode;
                         ModMain.frmMain.ImgBack.Visibility = Visibility.Visible;
                         if (isHint)
-                                HintService.Hint(Lang.Text("Setup.Ui.Background.Refresh.Success", ModBase.GetFileNameFromPath(address)), HintType.Success,
+                            HintService.Hint(
+                                Lang.Text(
+                                    isAnimated
+                                        ? "Setup.Ui.Background.Refresh.AnimatedSuccess"
+                                        : "Setup.Ui.Background.Refresh.Success",
+                                    ModBase.GetFileNameFromPath(address)),
+                                HintType.Success,
                                 false);
                     }
                     catch (Exception ex)
@@ -668,6 +703,16 @@ public partial class PageSetupUI
             return;
         SetByTag(sender.Tag?.ToString(), sender.SelectedIndex);
         ThemeManager.ThemeRefresh();
+    }
+
+    // 主题颜色跟随系统
+    private void CheckFollowSystemTheme_Change(object senderRaw, bool user)
+    {
+        CheckBoxChange(senderRaw, user);
+        if (ModAnimation.AniExitsAnyControl())
+            return;
+        // 立即按当前系统主题应用一次
+        ThemeManager.ApplyFollowSystemTheme();
     }
 
     // 赞助

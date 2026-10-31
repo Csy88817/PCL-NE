@@ -110,6 +110,21 @@ public class ModSetup
     /// </summary>
     public static void ApplyAll()
     {
+        // 配置已经加载完成，趁本次运行还没把新配置写回磁盘，先备份一份当前配置
+        // （后台线程执行、失败只写日志，绝不会影响启动）
+        ConfigBackup.TryBackupOnce();
+
+        // 加载会执行代码的插件，然后通知它们启动器已就绪
+        try
+        {
+            PluginHost.LoadAll();
+            PluginHost.RaiseLauncherReady();
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "加载插件失败", ModBase.LogLevel.Developer);
+        }
+
         // Launch
         LaunchRamType(Config.Launch.MemoryAllocationMode);
 

@@ -19,6 +19,7 @@ using PCL.Core.Utils.Validate;
 using PCL.Network;
 using PCL.Network.Loaders;
 using PCL.Core.App.Localization;
+using PCL.Core.Logging;
 using System.Globalization;
 
 namespace PCL;
@@ -48,6 +49,7 @@ public partial class PageToolsTest : IPageView
     public void OnNavigatedTo(object? parameter)
     {
         RefreshOnNavigate();
+        RefreshOpenFolderButtons();
     }
 
     public void OnNavigatedFrom()
@@ -370,6 +372,92 @@ public partial class PageToolsTest : IPageView
             ModBase.Log(ex, "打开下载文件夹失败");
         }
     }
+
+    #region 卡片：一键打开目录
+
+    /// <summary>刷新「一键打开目录」中依赖当前实例的按钮状态。</summary>
+    private void RefreshOpenFolderButtons()
+    {
+        _vm.RefreshOpenFolderButtons(ModInstanceList.McMcInstanceSelected is not null);
+    }
+
+    // 打开当前实例的 Mods 文件夹
+    private void BtnOpenModsFolder_Click(object sender, MouseButtonEventArgs e)
+    {
+        OpenInstanceFolder(@"mods\");
+    }
+
+    // 打开当前实例的实例文件夹
+    private void BtnOpenInstanceFolder_Click(object sender, MouseButtonEventArgs e)
+    {
+        OpenInstanceFolder();
+    }
+
+    // 打开启动器日志文件夹
+    private void BtnOpenLogFolder_Click(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            OpenFolder(LogService.Logger.Configuration.StoreFolder);
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "获取启动器日志文件夹失败", ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Tools.Test.OpenFolder.Failed"));
+        }
+    }
+
+    // 打开 .minecraft 根目录
+    private void BtnOpenMinecraftFolder_Click(object sender, MouseButtonEventArgs e)
+    {
+        OpenFolder(ModFolder.mcFolderSelected);
+    }
+
+    /// <summary>打开当前实例的目录；未选择实例时给出提示。</summary>
+    /// <param name="subFolder">实例内的子文件夹（相对于版本隔离后的 Minecraft 根目录），留空则打开实例文件夹本身。</param>
+    private void OpenInstanceFolder(string subFolder = "")
+    {
+        var instance = ModInstanceList.McMcInstanceSelected;
+        if (instance is null)
+        {
+            HintService.Hint(Lang.Text("Tools.Test.OpenFolder.NoInstance"), HintType.Error);
+            return;
+        }
+
+        try
+        {
+            OpenFolder(string.IsNullOrEmpty(subFolder) ? instance.PathInstance : instance.PathIndie + subFolder);
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, $"获取实例文件夹失败（{instance.PathInstance}）", ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Tools.Test.OpenFolder.Failed"));
+        }
+    }
+
+    /// <summary>打开一个文件夹，不存在时先创建；路径为空时给出提示。</summary>
+    private static void OpenFolder(string folderPath)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(folderPath))
+            {
+                HintService.Hint(Lang.Text("Tools.Test.OpenFolder.NoPath"), HintType.Error);
+                return;
+            }
+
+            folderPath = folderPath.Replace("/", @"\").TrimEnd('\\') + @"\";
+            Directory.CreateDirectory(folderPath);
+            ModBase.OpenExplorer(folderPath);
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, $"打开文件夹失败（{folderPath}）", ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Tools.Test.OpenFolder.Failed"));
+        }
+    }
+
+    #endregion
 
     private void BtnDownloadStart_Click(object sender, MouseButtonEventArgs e)
     {

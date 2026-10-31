@@ -3599,4 +3599,76 @@
     <sys:String x:Key="Minecraft.Download.Stage.DownloadRiftLibraries">Download Rift libraries</sys:String>
     <sys:String x:Key="Select.Instance.Card.Rift">Rift instance</sys:String>
 
+    <!-- MCJS web version -->
+    <sys:String x:Key="Download.Left.Mcjs">MCJS</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Title">MCJS — Minecraft in the browser</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Description">MCJS is the Simplified-Chinese integration site for Eaglercraft, a browser build of Minecraft. You can play without installing Java or a launcher. PCL NE only links to versions and mirrors; it neither hosts nor downloads any game files.</sys:String>
+    <sys:String x:Key="Download.Mcjs.OpenWebsite">Visit the MCJS website</sys:String>
+    <sys:String x:Key="Download.Mcjs.Mirror.Tooltip">Switch to another mirror</sys:String>
+    <!-- Tools: open folders -->
+    <sys:String x:Key="Tools.Test.OpenFolder.Title">Open folders</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Mods">Open mods folder</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Mods.ToolTip">Open the mods folder of the current instance</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Instance">Open instance folder</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Instance.ToolTip">Open the folder that holds the current instance</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Logs">Open log folder</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Logs.ToolTip">Open the folder that holds the launcher logs</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Minecraft">Open Minecraft folder</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Minecraft.ToolTip">Open the current .minecraft root folder</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.NoInstance">No instance selected</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.NoPath">Log folder unavailable</sys:String>
+    <sys:String x:Key="Tools.Test.OpenFolder.Failed">Failed to open the folder</sys:String>
+
+    <!-- Launcher plugins (.pclne) -->
+    <sys:String x:Key="Download.Left.Plugin">Plugins</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Title">Launcher plugins</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Description">A plugin is a .pclne file (a zip archive with a manifest.json at its root) that adds information and entry points to the launcher. PCL NE plugins are declarative: the launcher only reads and displays the name, author, description, icon and links declared in the manifest. It never executes code from the plugin, so a plugin cannot touch your accounts, saves or launch flow.</sys:String>
+    <sys:String x:Key="Download.Plugin.Import">Import .pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder">Open plugin folder</sys:String>
+    <sys:String x:Key="Download.Plugin.ListTitle">Installed plugins ({0})</sys:String>
+    <sys:String x:Key="Download.Plugin.Empty">No plugins installed yet. Use "Import .pclne" above to pick a plugin package.</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenHomepage">Open plugin homepage</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder.Button">Open plugin folder</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall">Uninstall plugin</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall.Confirm.Message">Uninstall the plugin "{0}"? Its files will be deleted.</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall.Confirm.Title">Uninstall plugin</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstalled">Uninstalled plugin {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Imported">Imported plugin {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.Failed">Failed to import the plugin</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.AlreadyExists">A plugin with the same id is already installed ({0}). Continuing will overwrite it. Continue?</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.AlreadyExists.Title">Plugin already installed</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.FileFilter">PCL NE plugin files(*.pclne)|*.pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.Import.SelectTitle">Select a .pclne plugin to import</sys:String>
+    <sys:String x:Key="Download.Plugin.OperationFailed">Plugin operation failed</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.FileMissing">The plugin file does not exist or cannot be read</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.NoManifest">This package has no manifest.json, so it is not a valid .pclne plugin</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.InvalidManifest">The plugin manifest.json is malformed</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.InvalidId">The plugin id "{0}" is invalid: only letters, digits, dot, underscore and hyphen are allowed, it must start with a letter or digit, and it must be at most 64 characters</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.UnsafeEntry">The plugin contains an unsafe path ({0}); installation was refused</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.TooLarge">The plugin is too large after extraction; installation was refused</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.TooManyFiles">The plugin contains too many files ({0}); installation was refused</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.LauncherTooOld">This plugin requires launcher version code {0} or later; the current one is {1}</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.AlreadyExists">The plugin {0} is already installed</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeBadge">Runs code</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeWarning.Title">This plugin runs code</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeWarning.Message">The plugin "{0}" declares runtime=dotnet, so after importing it will run code with the launcher's own permissions and can read or write files and access the network. Only install plugins from sources you trust. Continue?</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.LoadFailed">Failed to load the code plugin {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.AssemblyMissing">No assembly found in the plugin: the manifest entry must be "Namespace.TypeName, AssemblyName" and the assembly must sit at the plugin root</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.EntryNotFound">The plugin entry type {0} was not found</sys:String>
+    <sys:String x:Key="Download.Plugin.Error.EntryLoadMissing">The plugin entry type {0} has no public void Load(object host) method</sys:String>
+    <!-- Plugin store -->
+    <sys:String x:Key="Download.Left.PluginStore">Plugin store</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Title">Plugin store</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Description">Browse and install plugins from the official PCL NE plugin store. Both the index and the plugin packages are served by this site, and plugins take effect right after installation; entries marked "Runs code" ask for confirmation first.</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.OpenWebsite">Open the web store</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.LoadingList">Getting the plugin store list...</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.ListTitle">Store plugins ({0})</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Empty">The store has no plugins yet.</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Install">Install from store</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Installing">Installing plugin {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Installed">Installed plugin {0}</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.InstalledBadge">Installed</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.InstallFailed">Failed to install from the plugin store</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Error.BadIndex">The plugin store returned malformed data</sys:String>
+
 </ResourceDictionary>

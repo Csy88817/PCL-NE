@@ -1,0 +1,20 @@
+<!-- PCL NE 自定义图标：Rift 加载器（等轴 3D 立方体 + 裂痕）。原创绘制，不使用 lucide 资源。 -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- 立方体轮廓 -->
+  <path d="M12 3 L20 7.5 L20 16.5 L12 21 L4 16.5 L4 7.5 Z" />
+  <!-- 三条棱，构成立方体的顶面与两个可见面 -->
+  <path d="M12 3 L12 12" />
+  <path d="M4 7.5 L12 12 L20 7.5" />
+  <!-- 右侧面上的裂痕，呼应 Rift 的名字 -->
+  <path d="M14.9 13.3 L13.3 15.4 L14.9 16.6 L13.5 18.9" />
+</svg>

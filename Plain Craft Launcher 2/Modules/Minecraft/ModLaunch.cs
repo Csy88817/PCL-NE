@@ -240,6 +240,17 @@ public static class ModLaunch
             return false;
         }
 
+        // 通知插件：即将开始启动游戏（前置检查都已通过）
+        try
+        {
+            PluginHost.RaiseGameLaunching(currentLaunchOptions.instance?.Name ??
+                                          ModInstanceList.McMcInstanceSelected?.Name ?? "");
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "触发插件的 GameLaunching 事件失败", ModBase.LogLevel.Developer);
+        }
+
         // 强制切换需要启动的实例
         if (currentLaunchOptions.instance is not null &&
             ModInstanceList.McMcInstanceSelected != currentLaunchOptions.instance)

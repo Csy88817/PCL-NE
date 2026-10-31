@@ -137,6 +137,18 @@
                 </local:MyListItem.Buttons>
             </local:MyListItem>
 
+            <local:MyListItem x:Name="ItemPlugin" Type="RadioBox" IsScaleAnimationEnabled="False" Tag="21"
+                              Check="PageCheck"
+                              MinPaddingRight="35" Height="36" VerticalAlignment="Top"
+                              Title="{DynamicResource Download.Left.Plugin}"
+                              LogoScale="1.06"
+                              SvgIcon="lucide/package-plus" />
+            <local:MyListItem x:Name="ItemPluginStore" Type="RadioBox" IsScaleAnimationEnabled="False" Tag="22"
+                              Check="PageCheck"
+                              MinPaddingRight="35" Height="36" VerticalAlignment="Top"
+                              Title="{DynamicResource Download.Left.PluginStore}"
+                              LogoScale="1.06"
+                              SvgIcon="lucide/package" />
             <TextBlock Text="{DynamicResource Download.Left.Installation}" Margin="13,10,5,4" Opacity="0.6" FontSize="12" />
             <local:MyListItem x:Name="ItemClient" IsScaleAnimationEnabled="False" Type="RadioBox" Tag="9"
                               Check="PageCheck"
@@ -287,7 +299,7 @@
                               MinPaddingRight="35" Height="36" VerticalAlignment="Top"
                               Title="{DynamicResource Download.Left.Rift}"
                               LogoScale="1.06"
-                              SvgIcon="lucide/git-branch">
+                              SvgIcon="pclne/rift">
                 <local:MyListItem.Buttons>
                     <x:Array Type="{x:Type local:MyIconButton}">
                         <local:MyIconButton Tag="19" ToolTip="{DynamicResource Common.Action.Refresh}"
@@ -298,6 +310,12 @@
                     </x:Array>
                 </local:MyListItem.Buttons>
             </local:MyListItem>
+            <local:MyListItem x:Name="ItemMcjs" Type="RadioBox" IsScaleAnimationEnabled="False" Tag="20"
+                              Check="PageCheck"
+                              MinPaddingRight="35" Height="36" VerticalAlignment="Top"
+                              Title="{DynamicResource Download.Left.Mcjs}"
+                              LogoScale="1.06"
+                              SvgIcon="lucide/globe" />
         </StackPanel>
     </local:MyScrollViewer>
 </local:MyPageLeft>
