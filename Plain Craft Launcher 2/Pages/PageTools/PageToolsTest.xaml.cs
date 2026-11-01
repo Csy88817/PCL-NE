@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -898,4 +900,246 @@ public partial class PageToolsTest : IPageView
         SaveCacheDownloadFolder(sender, e);
         TextDownloadName_ValidateChanged(sender, e);
     }
+
+    #region 存储占用统计
+
+    /// <summary>
+    ///     统计 versions 目录下每个实例占用的空间（只读，不修改任何文件）。
+    /// </summary>
+    private void BtnCalcDiskUsage_Click(object sender, MouseButtonEventArgs e)
+    {
+        var root = Path.Combine(ModFolder.mcFolderSelected, "versions");
+        if (!Directory.Exists(root))
+        {
+            LabDiskUsage.Text = Lang.Text("Tools.Test.DiskUsage.NoData");
+            return;
+        }
+
+        LabDiskUsage.Text = Lang.Text("Tools.Test.DiskUsage.Working");
+        Task.Run(() =>
+        {
+            try
+            {
+                var rows = new List<(string Name, long Bytes, int Files)>();
+                foreach (var dir in Directory.GetDirectories(root))
+                {
+                    var (bytes, files) = FolderSizeGet(dir);
+                    rows.Add((Path.GetFileName(dir), bytes, files));
+                }
+
+                if (rows.Count == 0)
+                {
+                    ModBase.RunInUi(() => LabDiskUsage.Text = Lang.Text("Tools.Test.DiskUsage.NoData"));
+                    return;
+                }
+
+                var total = rows.Sum(r => r.Bytes);
+                var sb = new StringBuilder();
+                sb.AppendLine(Lang.Text("Tools.Test.DiskUsage.Total", Lang.FileSize(total)));
+                // 占用最大的排前面，最多列 10 条，避免列表过长
+                foreach (var row in rows.OrderByDescending(r => r.Bytes).Take(10))
+                    sb.AppendLine(Lang.Text("Tools.Test.DiskUsage.Row", row.Name,
+                        Lang.FileSize(row.Bytes), row.Files));
+                if (rows.Count > 10)
+                    sb.AppendLine(Lang.Text("Tools.Test.DiskUsage.More", rows.Count - 10));
+
+                var text = sb.ToString().TrimEnd();
+                ModBase.RunInUi(() => LabDiskUsage.Text = text);
+            }
+            catch (Exception ex)
+            {
+                ModBase.Log(ex, "统计实例占用失败", ModBase.LogLevel.Feedback,
+                    userSummary: Lang.Text("Tools.Test.DiskUsage.Failed"));
+            }
+        });
+    }
+
+    private void BtnOpenVersionsFolder_Click(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            OpenFolder(Path.Combine(ModFolder.mcFolderSelected, "versions"));
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "打开 versions 文件夹失败", ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Tools.Test.OpenFolder.Failed"));
+        }
+    }
+
+    /// <summary>
+    ///     递归统计一个目录的字节数与文件数。遇到无权限的子目录就跳过，不中断整体统计。
+    /// </summary>
+    private static (long Bytes, int Files) FolderSizeGet(string folder)
+    {
+        long bytes = 0L;
+        var files = 0;
+        try
+        {
+            foreach (var file in Directory.GetFiles(folder))
+                try
+                {
+                    bytes += new FileInfo(file).Length;
+                    files += 1;
+                }
+                catch
+                {
+                    // 单个文件读不到就跳过
+                }
+
+            foreach (var dir in Directory.GetDirectories(folder))
+                try
+                {
+                    var (subBytes, subFiles) = FolderSizeGet(dir);
+                    bytes += subBytes;
+                    files += subFiles;
+                }
+                catch
+                {
+                    // 单个子目录失败就跳过
+                }
+        }
+        catch
+        {
+            // 目录本身读不到就当作 0
+        }
+
+        return (bytes, files);
+    }
+
+    #endregion
+
+    #region 世界备份
+
+    private static string WorldBackupFolder =>
+        Path.Combine(ModBase.pathPure, "Backup", "Worlds");
+
+    /// <summary>
+    ///     把当前实例的 saves 目录打包成一个 zip 放到 Backup/Worlds，文件名带时间。
+    /// </summary>
+    private void BtnBackupWorlds_Click(object sender, MouseButtonEventArgs e)
+    {
+        var instance = ModInstanceList.McMcInstanceSelected;
+        if (instance is null)
+        {
+            HintService.Hint(Lang.Text("Tools.Test.OpenFolder.NoInstance"), HintType.Error);
+            return;
+        }
+
+        var savesFolder = Path.Combine(instance.PathIndie, "saves");
+        if (!Directory.Exists(savesFolder))
+        {
+            LabWorldBackup.Text = Lang.Text("Tools.Test.WorldBackup.NoSaves");
+            return;
+        }
+
+        LabWorldBackup.Text = Lang.Text("Tools.Test.WorldBackup.Working");
+        var instanceName = instance.Name;
+        Task.Run(() =>
+        {
+            try
+            {
+                Directory.CreateDirectory(WorldBackupFolder);
+                var stamp = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
+                var safeName = string.Join("_", instanceName.Split(Path.GetInvalidFileNameChars()));
+                var target = Path.Combine(WorldBackupFolder, $"{safeName}-{stamp}.zip");
+
+                ZipFile.CreateFromDirectory(savesFolder, target, CompressionLevel.Optimal, true);
+                var size = new FileInfo(target).Length;
+                ModBase.RunInUi(() => LabWorldBackup.Text =
+                    Lang.Text("Tools.Test.WorldBackup.Done", Path.GetFileName(target), Lang.FileSize(size)));
+            }
+            catch (Exception ex)
+            {
+                ModBase.Log(ex, "备份世界失败", ModBase.LogLevel.Feedback,
+                    userSummary: Lang.Text("Tools.Test.WorldBackup.Failed"));
+            }
+        });
+    }
+
+    private void BtnOpenWorldBackupFolder_Click(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            OpenFolder(WorldBackupFolder);
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "打开世界备份文件夹失败", ModBase.LogLevel.Feedback,
+                userSummary: Lang.Text("Tools.Test.OpenFolder.Failed"));
+        }
+    }
+
+    #endregion
+
+    #region 日志摘要
+
+    /// <summary>
+    ///     扫描最近的启动器日志，统计 ERROR / WARN / Exception 等关键字出现次数（只读）。
+    /// </summary>
+    private void BtnAnalyzeLog_Click(object sender, MouseButtonEventArgs e)
+    {
+        LabLogSummary.Text = Lang.Text("Tools.Test.LogSummary.Working");
+        Task.Run(() =>
+        {
+            try
+            {
+                string folder;
+                try
+                {
+                    folder = LogService.Logger.Configuration.StoreFolder;
+                }
+                catch
+                {
+                    folder = "";
+                }
+
+                if (string.IsNullOrWhiteSpace(folder) || !Directory.Exists(folder))
+                {
+                    ModBase.RunInUi(() => LabLogSummary.Text = Lang.Text("Tools.Test.LogSummary.NoLogs"));
+                    return;
+                }
+
+                var logs = Directory.GetFiles(folder, "*.log")
+                    .Select(f => new FileInfo(f))
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .Take(5)
+                    .ToList();
+                if (logs.Count == 0)
+                {
+                    ModBase.RunInUi(() => LabLogSummary.Text = Lang.Text("Tools.Test.LogSummary.NoLogs"));
+                    return;
+                }
+
+                int error = 0, warn = 0, exception = 0;
+                long lines = 0L;
+                foreach (var log in logs)
+                    using (var stream = log.OpenRead())
+                    using (var reader = new StreamReader(stream))
+                    {
+                        string? line;
+                        while ((line = reader.ReadLine()) is not null)
+                        {
+                            lines += 1;
+                            if (line.Contains("Exception", StringComparison.OrdinalIgnoreCase)) exception += 1;
+                            if (line.Contains("[ERROR]", StringComparison.OrdinalIgnoreCase) ||
+                                line.Contains("[FATAL]", StringComparison.OrdinalIgnoreCase)) error += 1;
+                            if (line.Contains("[WARN]", StringComparison.OrdinalIgnoreCase)) warn += 1;
+                        }
+                    }
+
+                var text = Lang.Text("Tools.Test.LogSummary.Result",
+                    logs.Count, logs[0].LastWriteTime.ToString("yyyy-MM-dd HH:mm"),
+                    lines, error, warn, exception);
+                ModBase.RunInUi(() => LabLogSummary.Text = text);
+            }
+            catch (Exception ex)
+            {
+                ModBase.Log(ex, "分析日志失败", ModBase.LogLevel.Feedback,
+                    userSummary: Lang.Text("Tools.Test.LogSummary.Failed"));
+            }
+        });
+    }
+
+    #endregion
 }

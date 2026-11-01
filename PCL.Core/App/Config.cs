@@ -310,6 +310,13 @@ public static partial class Config
             /// 开启后，系统的应用主题（AppsUseLightTheme）发生变化时会自动把启动器切换为对应的浅色/深色主题；启动时也会按系统主题应用一次。
             /// </summary>
             [ConfigItem<bool>("UiFollowSystemTheme", false, ConfigSource.Local)] public partial bool FollowSystemTheme { get; set; }
+
+            /// <summary>
+            /// 实验性：新 UI。<br/>
+            /// 开启后卡片等控件的圆角与阴影会换成更大、更柔和的样式，需要重新打开启动器才会完全生效。
+            /// 这是实验项，外观后续可能调整。
+            /// </summary>
+            [ConfigItem<bool>("UiExperimentalNewLook", false, ConfigSource.Local)] public partial bool ExperimentalNewLook { get; set; }
         }
 
         /// <summary>

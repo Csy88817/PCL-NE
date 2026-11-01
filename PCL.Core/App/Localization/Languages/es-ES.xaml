@@ -10,4 +10,32 @@
     <sys:String x:Key="Meta.Code">es-ES</sys:String>
     <sys:String x:Key="Meta.Name">Español (España)</sys:String>
 
+
+    <!-- PCL NE: complementos / tienda / Rift / MCJS / herramientas / nuevo aspecto -->
+    <sys:String x:Key="Download.Left.Rift">Rift</sys:String>
+    <sys:String x:Key="Download.Left.Mcjs">MCJS</sys:String>
+    <sys:String x:Key="Download.Left.Plugin">Complementos</sys:String>
+    <sys:String x:Key="Download.Left.PluginStore">Tienda de complementos</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Title">Complementos del lanzador</sys:String>
+    <sys:String x:Key="Download.Plugin.Import">Importar .pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder">Abrir carpeta de complementos</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall">Desinstalar complemento</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Title">Tienda de complementos</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.OpenWebsite">Abrir la tienda web</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Install">Instalar desde la tienda</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeBadge">Ejecuta codigo</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Title">MCJS: Minecraft en el navegador</sys:String>
+    <sys:String x:Key="Download.Mcjs.OpenWebsite">Visitar el sitio de MCJS</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Title">Uso de disco por instancia</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Calc">Empezar a medir</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.OpenVersions">Abrir carpeta versions</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Title">Copia de seguridad de mundos</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Start">Copiar los mundos actuales</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Open">Abrir carpeta de copias</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Title">Resumen del registro</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Analyze">Analizar registros recientes</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.OpenFolder">Abrir carpeta de registros</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook">Nuevo aspecto (experimental)</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook.ToolTip">Redondea las tarjetas y los elementos de lista con esquinas mas amplias y una sombra mas suave. Es un aspecto experimental y puede cambiar. La pagina actual se actualiza al instante, pero algunos lugares pueden requerir reiniciar el lanzador.</sys:String>
+
 </ResourceDictionary>

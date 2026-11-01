@@ -1769,7 +1769,7 @@ public partial class FormMain
             return;
         var pageType = (PageType)int.Parse(sender.Tag.ToString());
         PageChangeActual(pageType, PageSubType.Default);
-        }
+    }
 
     private void BtnTitleInner_Click(object sender, EventArgs e)
     {

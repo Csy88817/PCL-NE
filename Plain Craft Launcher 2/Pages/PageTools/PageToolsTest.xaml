@@ -269,6 +269,51 @@
                     </Border>
                 </StackPanel>
             </local:MyCard>
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Tools.Test.DiskUsage.Title}">
+                <StackPanel Margin="25,40,25,5">
+                    <TextBlock Text="{DynamicResource Tools.Test.DiskUsage.Description}"
+                               TextWrapping="Wrap" Opacity="0.75" Margin="0,0,0,10" />
+                    <TextBlock x:Name="LabDiskUsage" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <WrapPanel ItemHeight="50">
+                        <local:MyButton MinWidth="150" Text="{DynamicResource Tools.Test.DiskUsage.Calc}"
+                                        Margin="0,0,15,15" ColorType="Highlight"
+                                        Click="BtnCalcDiskUsage_Click" />
+                        <local:MyButton MinWidth="150" Text="{DynamicResource Tools.Test.DiskUsage.OpenVersions}"
+                                        Margin="0,0,15,15"
+                                        Click="BtnOpenVersionsFolder_Click" />
+                    </WrapPanel>
+                </StackPanel>
+            </local:MyCard>
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Tools.Test.WorldBackup.Title}">
+                <StackPanel Margin="25,40,25,5">
+                    <TextBlock Text="{DynamicResource Tools.Test.WorldBackup.Description}"
+                               TextWrapping="Wrap" Opacity="0.75" Margin="0,0,0,10" />
+                    <TextBlock x:Name="LabWorldBackup" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <WrapPanel ItemHeight="50">
+                        <local:MyButton MinWidth="150" Text="{DynamicResource Tools.Test.WorldBackup.Start}"
+                                        Margin="0,0,15,15" ColorType="Highlight"
+                                        Click="BtnBackupWorlds_Click" />
+                        <local:MyButton MinWidth="150" Text="{DynamicResource Tools.Test.WorldBackup.Open}"
+                                        Margin="0,0,15,15"
+                                        Click="BtnOpenWorldBackupFolder_Click" />
+                    </WrapPanel>
+                </StackPanel>
+            </local:MyCard>
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Tools.Test.LogSummary.Title}">
+                <StackPanel Margin="25,40,25,5">
+                    <TextBlock Text="{DynamicResource Tools.Test.LogSummary.Description}"
+                               TextWrapping="Wrap" Opacity="0.75" Margin="0,0,0,10" />
+                    <TextBlock x:Name="LabLogSummary" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <WrapPanel ItemHeight="50">
+                        <local:MyButton MinWidth="150" Text="{DynamicResource Tools.Test.LogSummary.Analyze}"
+                                        Margin="0,0,15,15" ColorType="Highlight"
+                                        Click="BtnAnalyzeLog_Click" />
+                        <local:MyButton MinWidth="150" Text="{DynamicResource Tools.Test.LogSummary.OpenFolder}"
+                                        Margin="0,0,15,15"
+                                        Click="BtnOpenLogFolder_Click" />
+                    </WrapPanel>
+                </StackPanel>
+            </local:MyCard>
         </StackPanel>
     </local:MyScrollViewer>
 </local:MyPageRight>

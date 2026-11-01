@@ -3144,6 +3144,8 @@
     <sys:String x:Key="Setup.Ui.Basic.Opacity2">Opacity</sys:String>
     <sys:String x:Key="Setup.Ui.Basic.ShowLogo">Display the PCL NE logo while opening the launcher</sys:String>
     <sys:String x:Key="Setup.Ui.Basic.ShowTriviaHint">Show "Trivia" when launching the game</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook">New look (experimental)</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook.ToolTip">Rounds off cards and list items with larger corners and a softer shadow. This is an experimental appearance and may be adjusted further. The current page refreshes immediately, though a few places may need a launcher restart to fully apply.</sys:String>
     <sys:String x:Key="Setup.Ui.Basic.Title">Basics</sys:String>
 
     <!-- Setup.Ui.FeatureHide -->
@@ -3727,6 +3729,35 @@
     <sys:String x:Key="Tools.Test.OpenFolder.NoInstance">No instance selected</sys:String>
     <sys:String x:Key="Tools.Test.OpenFolder.NoPath">Log folder unavailable</sys:String>
     <sys:String x:Key="Tools.Test.OpenFolder.Failed">Failed to open the folder</sys:String>
+    <!-- Experimental: disk usage -->
+    <sys:String x:Key="Tools.Test.DiskUsage.Title">Instance disk usage</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Description">Measures the disk space and file count of every instance under versions, sorted by size. Read-only: no file is modified. May take a few seconds with many instances.</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Calc">Start measuring</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.OpenVersions">Open versions folder</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Working">Measuring...</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Total">Total: {0}</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Row">{0} — {1} ({2} files)</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.More">{0} more instance(s) not shown</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.NoData">No instances found.</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Failed">Failed to measure instance disk usage</sys:String>
+    <!-- Experimental: world backup -->
+    <sys:String x:Key="Tools.Test.WorldBackup.Title">World backup</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Description">Packs the current instance's saves folder into a timestamped zip under Backup\Worlds in the launcher folder. It only reads saves and creates a new archive; existing saves are never deleted or modified.</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Start">Back up current worlds</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Open">Open backup folder</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Working">Packing saves, please wait...</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Done">Backed up to {0} ({1})</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.NoSaves">This instance has no saves folder, so there is nothing to back up.</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Failed">Failed to back up worlds</sys:String>
+    <!-- Experimental: log summary -->
+    <sys:String x:Key="Tools.Test.LogSummary.Title">Log summary</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Description">Scans the 5 most recent launcher logs and counts total lines plus ERROR / WARN / Exception occurrences for a quick sanity check. Read-only.</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Analyze">Analyse recent logs</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.OpenFolder">Open log folder</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Working">Analysing logs...</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Result">Analysed the {0} most recent logs (latest modified {1}): {2} lines, {3} ERROR, {4} WARN, {5} exception(s).</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.NoLogs">No log files found.</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Failed">Failed to analyse logs</sys:String>
 
     <!-- Launcher plugins (.pclne) -->
     <sys:String x:Key="Download.Left.Plugin">Plugins</sys:String>

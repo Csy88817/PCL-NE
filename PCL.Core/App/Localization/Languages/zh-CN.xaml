@@ -3144,6 +3144,8 @@
     <sys:String x:Key="Setup.Ui.Basic.Opacity2">不透明度</sys:String>
     <sys:String x:Key="Setup.Ui.Basic.ShowLogo">打开启动器时显示 PCL NE 图标</sys:String>
     <sys:String x:Key="Setup.Ui.Basic.ShowTriviaHint">在启动游戏时显示"你知道吗"</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook">新 UI（实验项）</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook.ToolTip">把卡片与列表项的圆角加大、阴影放柔和，整体更圆润一些。属于实验性外观，后续可能继续调整；切换后当前界面会立刻刷新，个别地方可能要重新打开启动器才会完全生效。</sys:String>
     <sys:String x:Key="Setup.Ui.Basic.Title">基础</sys:String>
 
     <!-- Setup.Ui.FeatureHide -->
@@ -3727,6 +3729,35 @@
     <sys:String x:Key="Tools.Test.OpenFolder.NoInstance">没有选中任何实例</sys:String>
     <sys:String x:Key="Tools.Test.OpenFolder.NoPath">日志目录不可用</sys:String>
     <sys:String x:Key="Tools.Test.OpenFolder.Failed">打开文件夹失败</sys:String>
+    <!-- 试用：存储占用统计 -->
+    <sys:String x:Key="Tools.Test.DiskUsage.Title">实例占用统计</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Description">统计 versions 目录下每个实例占用的磁盘空间与文件数，按大小排序。只读取文件信息，不修改任何内容；实例很多时需要等几秒。</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Calc">开始统计</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.OpenVersions">打开 versions 目录</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Working">正在统计…</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Total">合计占用：{0}</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Row">{0} — {1}（{2} 个文件）</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.More">还有 {0} 个实例未显示</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.NoData">没有找到任何实例。</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Failed">统计实例占用失败</sys:String>
+    <!-- 试用：世界备份 -->
+    <sys:String x:Key="Tools.Test.WorldBackup.Title">世界备份</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Description">把当前实例的 saves 目录整体打包成 zip，存到启动器目录下的 Backup\Worlds，文件名带时间戳。只读取存档并新建压缩包，不会删除或改动原有存档。</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Start">立即备份当前世界</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Open">打开备份目录</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Working">正在打包存档，请稍候…</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Done">已备份为 {0}（{1}）</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.NoSaves">当前实例没有 saves 目录，无法备份。</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Failed">备份世界失败</sys:String>
+    <!-- 试用：日志摘要 -->
+    <sys:String x:Key="Tools.Test.LogSummary.Title">日志摘要</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Description">扫描最近 5 个启动器日志，统计总行数与 ERROR / WARN / Exception 出现次数，方便快速判断有没有异常。只读取日志，不改动文件。</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Analyze">分析最近日志</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.OpenFolder">打开日志目录</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Working">正在分析日志…</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Result">已分析最近 {0} 个日志（最新一个修改于 {1}）：共 {2} 行，ERROR {3} 条，WARN {4} 条，异常 {5} 条。</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.NoLogs">没有找到日志文件。</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Failed">分析日志失败</sys:String>
 
     <!-- 启动器插件（.pclne） -->
     <sys:String x:Key="Download.Left.Plugin">插件</sys:String>

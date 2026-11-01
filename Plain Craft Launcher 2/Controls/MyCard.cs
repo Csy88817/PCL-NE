@@ -5,8 +5,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using PCL.Core.App;
 using PCL.Core.UI.Controls;
-
 namespace PCL;
 
 public class MyCard : AnimatedBackgroundGrid
@@ -14,6 +14,50 @@ public class MyCard : AnimatedBackgroundGrid
     // 动画
     private const double dropShadowIdleOpacity = 0.07d;
     private const double dropShadowHoverOpacity = 0.4d;
+
+    /// <summary>
+    ///     默认圆角。实验性「新 UI」会换成更圆、阴影更柔和的样式。
+    /// </summary>
+    private const double defaultCornerRadius = 5d;
+
+    private const double newLookCornerRadius = 8d;
+
+    /// <summary>
+    ///     当前是否启用实验性新 UI（读全局配置，切页后新建的卡片会立即生效）。
+    /// </summary>
+    private static bool IsNewLookEnabled
+    {
+        get
+        {
+            try
+            {
+                return Config.Preference.Theme.ExperimentalNewLook;
+            }
+            catch
+            {
+                return false; // 配置还没就绪时（例如设计器里）按默认样式走
+            }
+        }
+    }
+
+    /// <summary>
+    ///     给一张卡片套用当前 UI 风格。构造时调用；外部也可用它把已有卡片刷新成新样式。
+    /// </summary>
+    internal void ApplyLook()
+    {
+        if (!IsNewLookEnabled)
+        {
+            CornerRadius = new CornerRadius(defaultCornerRadius);
+            MainChrome.ShadowRadius = 3d;
+            MainChrome.Margin = new Thickness(-3d, -3d, -3d, -3d - ModBase.GetWPFSize(1d));
+            return;
+        }
+
+        CornerRadius = new CornerRadius(newLookCornerRadius);
+        MainChrome.ShadowRadius = 7d;
+        // 阴影更大，需要多留一点外边距，否则会被裁掉
+        MainChrome.Margin = new Thickness(-7d, -7d, -7d, -7d - ModBase.GetWPFSize(1d));
+    }
 
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register("Title", typeof(string), typeof(MyCard), new PropertyMetadata(""));
@@ -31,14 +75,16 @@ public class MyCard : AnimatedBackgroundGrid
         MainChrome = new MyDropShadow
         {
             Margin = new Thickness(-3, -3, -3, -3 - ModBase.GetWPFSize(1d)), ShadowRadius = 3d,
-            Opacity = dropShadowIdleOpacity, CornerRadius = new CornerRadius(5d)
+            Opacity = dropShadowIdleOpacity, CornerRadius = new CornerRadius(defaultCornerRadius)
         };
         MainChrome.SetResourceReference(MyDropShadow.ColorProperty, "ColorObject1");
         Children.Insert(0, MainChrome);
-        mainBorder = new BlurBorder { CornerRadius = new CornerRadius(5d), IsHitTestVisible = false };
+        mainBorder = new BlurBorder { CornerRadius = new CornerRadius(defaultCornerRadius), IsHitTestVisible = false };
         Children.Insert(1, mainBorder);
         mainGrid = new Grid();
         Children.Add(mainGrid);
+        // 按当前 UI 风格设置圆角与阴影（实验性新 UI 在构造时就生效）
+        ApplyLook();
         // 设置背景色
         SetResourceReference(BackgroundBrushProperty, "ColorBrushTransparentBackground");
         Loaded += (_, _) => Init();
@@ -110,6 +156,19 @@ public class MyCard : AnimatedBackgroundGrid
 
     protected override FrameworkElement AnimatableElement => mainBorder;
     public bool HasMouseAnimation { get; set; } = true;
+
+    /// <summary>
+    ///     把界面上已经建好的卡片刷新成当前 UI 风格。切换「实验性新 UI」后调用一次即可。
+    /// </summary>
+    public static void RefreshAllLook(DependencyObject root)
+    {
+        if (root is null)
+            return;
+        if (root is MyCard card)
+            card.ApplyLook();
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+            RefreshAllLook(VisualTreeHelper.GetChild(root, i));
+    }
 
     private void Init()
     {

@@ -226,6 +226,25 @@ public partial class PageSetupUI
             SetByTag(sender.Tag?.ToString(), sender.Checked);
     }
 
+    /// <summary>
+    ///     实验性新 UI：写配置后立刻把当前界面里已建好的卡片刷新一遍，不需要重启就能看到外形变化。
+    /// </summary>
+    private void CheckExperimentalNewLook_Change(object senderRaw, bool user)
+    {
+        var sender = (MyCheckBox)senderRaw;
+        if (!ModAnimation.AniExitsAnyControl())
+            SetByTag(sender.Tag?.ToString(), sender.Checked);
+        try
+        {
+            // 卡片圆角/阴影换成新 UI 样式，不需要重启
+            MyCard.RefreshAllLook(ModMain.frmMain);
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "刷新新 UI 外观失败", ModBase.LogLevel.Developer);
+        }
+    }
+
     private void TextBoxChange(object senderRaw, RoutedEventArgs e)
     {
         var sender = (MyTextBox)senderRaw;

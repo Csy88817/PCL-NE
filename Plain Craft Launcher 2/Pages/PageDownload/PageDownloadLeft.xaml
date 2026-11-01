@@ -315,7 +315,7 @@
                               MinPaddingRight="35" Height="36" VerticalAlignment="Top"
                               Title="{DynamicResource Download.Left.Mcjs}"
                               LogoScale="1.06"
-                              SvgIcon="lucide/globe" />
+                              SvgIcon="lucide/ethernet-port" />
         </StackPanel>
     </local:MyScrollViewer>
 </local:MyPageLeft>

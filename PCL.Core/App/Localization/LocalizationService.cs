@@ -56,17 +56,29 @@ public sealed partial class LocalizationService
 
     /// <summary>
     ///     受支持的 UI 语言。
+    ///     <para>
+    ///         只列出**翻译完整**的语言。翻译不完整的语言（ja-JP / fr-FR / es-ES）暂时不在此列表里：
+    ///         它们只覆盖了极少数键，选过去会看到大量键名而不是译文，因此先隐藏起来，
+    ///         等相应语言补齐后再加回来。语言资源文件与加载逻辑都保留，不影响其它语言。
+    ///     </para>
+    ///     <para>
+    ///         ⚠️ 这里的顺序会直接影响语言下拉框的选中项计算（见 PageSetupLauncherLanguageViewModel），
+    ///         调整顺序时需一并确认那边的映射仍然正确。
+    ///     </para>
     /// </summary>
     public static IReadOnlyList<LocalizationLanguage> SupportedLanguages { get; } =
     [
         _DefaultLanguage,
         new("zh-TW", "繁體中文（台灣）", "zh-TW", LocalizationFontProfile.TraditionalChinese),
         new("en-US", "English (US)", "en-US", LocalizationFontProfile.English),
-        new("en-GB", "English (United Kingdom)", "en-GB", LocalizationFontProfile.English),
-        new("ja-JP", "日本語（日本）", "ja-JP", LocalizationFontProfile.Japanese),
-        new("fr-FR", "Français (France)", "fr-FR", LocalizationFontProfile.Other),
-        new("es-ES", "Español (España)", "es-ES", LocalizationFontProfile.Other)
+        new("en-GB", "English (United Kingdom)", "en-GB", LocalizationFontProfile.English)
     ];
+
+    /// <summary>
+    ///     翻译尚未完成、因此暂时不在选择器里显示的语言代码。
+    ///     用户若因历史配置或系统语言落到这些代码上，会静默回退到默认语言。
+    /// </summary>
+    public static IReadOnlyList<string> HiddenIncompleteLanguages { get; } = ["ja-JP", "fr-FR", "es-ES"];
 
     [RegisterConfigEvent]
     public static ConfigEventRegistry OnLanguageConfigChanged => new(

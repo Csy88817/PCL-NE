@@ -432,4 +432,32 @@
     <sys:String x:Key="Launch.Homepage.LoadFailed.Retry">Réessayer</sys:String>
     <sys:String x:Key="Launch.Homepage.SlowWarning">Le chargement de la page d'accueil est trop lent ({0} secondes). Veuillez signaler ce problème à l'auteur de la page d'accueil, ou cesser temporairement d'utiliser cette page.</sys:String>
 
+
+    <!-- PCL NE : extensions / boutique / Rift / MCJS / outils / nouvelle apparence -->
+    <sys:String x:Key="Download.Left.Rift">Rift</sys:String>
+    <sys:String x:Key="Download.Left.Mcjs">MCJS</sys:String>
+    <sys:String x:Key="Download.Left.Plugin">Extensions</sys:String>
+    <sys:String x:Key="Download.Left.PluginStore">Boutique d'extensions</sys:String>
+    <sys:String x:Key="Download.Plugin.Intro.Title">Extensions du lanceur</sys:String>
+    <sys:String x:Key="Download.Plugin.Import">Importer un .pclne</sys:String>
+    <sys:String x:Key="Download.Plugin.OpenFolder">Ouvrir le dossier des extensions</sys:String>
+    <sys:String x:Key="Download.Plugin.Uninstall">Desinstaller l'extension</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Intro.Title">Boutique d'extensions</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.OpenWebsite">Ouvrir la boutique web</sys:String>
+    <sys:String x:Key="Download.Plugin.Store.Install">Installer depuis la boutique</sys:String>
+    <sys:String x:Key="Download.Plugin.CodeBadge">Execute du code</sys:String>
+    <sys:String x:Key="Download.Mcjs.Intro.Title">MCJS : Minecraft dans le navigateur</sys:String>
+    <sys:String x:Key="Download.Mcjs.OpenWebsite">Visiter le site de MCJS</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Title">Espace disque par instance</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.Calc">Lancer la mesure</sys:String>
+    <sys:String x:Key="Tools.Test.DiskUsage.OpenVersions">Ouvrir le dossier versions</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Title">Sauvegarde des mondes</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Start">Sauvegarder les mondes actuels</sys:String>
+    <sys:String x:Key="Tools.Test.WorldBackup.Open">Ouvrir le dossier des sauvegardes</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Title">Resume des journaux</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.Analyze">Analyser les journaux recents</sys:String>
+    <sys:String x:Key="Tools.Test.LogSummary.OpenFolder">Ouvrir le dossier des journaux</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook">Nouvelle apparence (experimental)</sys:String>
+    <sys:String x:Key="Setup.Ui.Basic.ExperimentalNewLook.ToolTip">Arrondit davantage les cartes et les elements de liste, avec une ombre plus douce. Cette apparence est experimentale et pourra evoluer. La page actuelle est actualisee immediatement, mais certains endroits peuvent necessiter un redemarrage du lanceur.</sys:String>
+
 </ResourceDictionary>
